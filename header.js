@@ -2,7 +2,7 @@
     const css = `
         @media (min-width: 992px) {
             .c-qiOHF {
-                background: url("http://plcl.me/images/bysNR.jpg") center center / cover no-repeat !important;
+                background: url("http://plcl.me/images/zLRVm.jpg") center center / cover no-repeat !important;
             }
 
             .c-qiOHF::before {
