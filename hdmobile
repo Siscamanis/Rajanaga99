@@ -1,0 +1,26 @@
+/* MOBILE ONLY */
+@media (max-width: 991px){
+  .c-ptpKx{
+    position: fixed !important;
+    overflow: hidden !important;
+    background: url("https://plcl.me/images/WoF7o.jpg") center center / cover no-repeat !important;
+  }
+
+  .c-ptpKx img[alt="header-bg"]{
+    display: none !important;
+  }
+
+  .c-ptpKx::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.20);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .c-ptpKx > *{
+    position: relative !important;
+    z-index: 1 !important;
+  }
+}
