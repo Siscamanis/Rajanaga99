@@ -2,7 +2,7 @@
   const css = `
     @media (max-width:991px){
       .c-ptpKx{
-        background:url("https://plcl.me/images/qQwnv.jpg") center/cover no-repeat!important;
+        background:url("http://plcl.me/images/3YFtU.jpg") center/cover no-repeat!important;
       }
       .c-ptpKx img[alt="header-bg"]{
         display:none!important;
