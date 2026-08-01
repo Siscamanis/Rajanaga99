@@ -3,7 +3,7 @@
         /* MOBILE */
         @media (max-width: 991px) {
             .c-ptpKx {
-                background: url("http://plcl.me/images/Lfdne.jpg") center / cover no-repeat !important;
+                background: url("http://plcl.me/images/sZVqh.jpg") center / cover no-repeat !important;
             }
 
             .c-ptpKx img[alt="header-bg"] {
@@ -14,7 +14,7 @@
         /* DESKTOP */
         @media (min-width: 992px) {
             .c-qiOHF {
-                background: url("http://plcl.me/images/XeYTu.jpg") center center / cover no-repeat !important;
+                background: url("http://plcl.me/images/zwLyK.jpg") center center / cover no-repeat !important;
             }
 
             .c-qiOHF::before {
