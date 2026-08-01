@@ -1,16 +1,38 @@
 (function () {
-  const css = `
-    @media (max-width:991px){
-      .c-ptpKx{
-        background:url("http://plcl.me/images/3YFtU.jpg") center/cover no-repeat!important;
-      }
-      .c-ptpKx img[alt="header-bg"]{
-        display:none!important;
-      }
-    }
-  `;
+    const css = `
+        /* MOBILE */
+        @media (max-width: 991px) {
+            .c-ptpKx {
+                background: url("http://plcl.me/images/Lfdne.jpg") center / cover no-repeat !important;
+            }
 
-  const style = document.createElement("style");
-  style.innerHTML = css;
-  document.head.appendChild(style);
+            .c-ptpKx img[alt="header-bg"] {
+                display: none !important;
+            }
+        }
+
+        /* DESKTOP */
+        @media (min-width: 992px) {
+            .c-qiOHF {
+                background: url("http://plcl.me/images/XeYTu.jpg") center center / cover no-repeat !important;
+            }
+
+            .c-qiOHF::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.35);
+                pointer-events: none;
+            }
+
+            .c-qiOHF > * {
+                position: relative;
+            }
+        }
+    `;
+
+    const style = document.createElement("style");
+    style.id = "responsive-background";
+    style.textContent = css;
+    document.head.appendChild(style);
 })();
