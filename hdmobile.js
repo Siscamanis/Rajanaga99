@@ -14,7 +14,7 @@
         /* DESKTOP */
         @media (min-width: 992px) {
             .c-qiOHF {
-                background: url("http://plcl.me/images/Xo2yK.jpg") center center / cover no-repeat !important;
+                background: url("http://plcl.me/images/j3XRc.jpg") center center / cover no-repeat !important;
             }
 
             .c-qiOHF::before {
