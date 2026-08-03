@@ -3,7 +3,7 @@
         /* MOBILE */
         @media (max-width: 991px) {
             .c-ptpKx {
-                background: url("http://plcl.me/images/RFLrJ.jpg") center / cover no-repeat !important;
+                background: url("http://plcl.me/images/sviyZ.jpg") center / cover no-repeat !important;
             }
 
             .c-ptpKx img[alt="header-bg"] {
