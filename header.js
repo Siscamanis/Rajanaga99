@@ -1,8 +1,20 @@
 (function () {
     const css = `
+        /* MOBILE */
+        @media (max-width: 991px) {
+            .c-ptpKx {
+                background: url("http://plcl.me/images/sviyZ.jpg") center / cover no-repeat !important;
+            }
+
+            .c-ptpKx img[alt="header-bg"] {
+                display: none !important;
+            }
+        }
+
+        /* DESKTOP */
         @media (min-width: 992px) {
             .c-qiOHF {
-                background: url("http://plcl.me/images/zLRVm.jpg") center center / cover no-repeat !important;
+                background: url("http://plcl.me/images/j3XRc.jpg") center center / cover no-repeat !important;
             }
 
             .c-qiOHF::before {
@@ -20,7 +32,7 @@
     `;
 
     const style = document.createElement("style");
-    style.id = "desktop-background-overlay";
+    style.id = "responsive-background";
     style.textContent = css;
     document.head.appendChild(style);
 })();
