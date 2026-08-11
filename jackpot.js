@@ -2,7 +2,7 @@
   "use strict";
 
   const JACKPOT_IMAGE =
-    "http://plcl.me/images/maqyZ.png";
+    "http://plcl.me/images/WkMaq.png";
 
   function replaceJackpotBackground() {
     const jackpotImages = document.querySelectorAll(
