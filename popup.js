@@ -1,1472 +1,581 @@
 "use strict";
 
-(function () {
-  const IMG = [
-    "http://plcl.me/images/gZUYy.png",
-    "",
-    ""
-  ];
+(() => {
+  const CONFIG = {
+    banners: [
+      "http://plcl.me/images/Rc3Ca.png",
+      "http://plcl.me/images/vv3HA.png",
+      "http://plcl.me/images/KPFFs.png"
+    ],
+    slideDelay: 7000,
+    gifs: [
+      {
+        src: "https://www.image2url.com/r2/default/gifs/1786706101549-46c2cbd4-7bc2-4a7b-9cd9-f95d2a4878ff.gif"
+      },
+      {
+        src: "https://www.image2url.com/r2/default/gifs/1786706728973-7c8bd8ad-a9d5-47e0-80ce-094f326e9612.gif",
+        href: "https://linkshortener.vip/rajanaga99-rtp",
+        label: "Buka RTP RAJANAGA99"
+      },
+      {
+        src: "https://www.image2url.com/r2/default/gifs/1786706890521-a2f1bb69-ac3d-4469-95a6-1a57d56edf15.gif"
+      }
+    ],
+    liveChat: "https://tawk.to/chat/69f47e817f14b41c33bd2abc/1jnhgsb1s",
+    rtp: "https://linkshortener.vip/rajanaga99-rtp",
+    storageKey: "rjn_popup_delay_1h",
+    delay: 60 * 60 * 1000
+  };
 
-  const DELAY_KEY = "rjn_popup_delay_1h";
-  const SLIDER_INTERVAL = 7000;
+  const IDS = {
+    style: "rjn-popup-style",
+    overlay: "rjn-popup-overlay",
+    popup: "rjn-popup"
+  };
 
-  const STYLE_ID = "rjn-popup-style";
-  const POPUP_ID = "rjn-popup";
-  const OVERLAY_ID = "rjn-popup-overlay";
-
-  let popupCreated = false;
-  let currentIndex = 0;
-  let sliderTimer = null;
-  let changingSlide = false;
-
-  function isAllowedPage() {
-    const path = (location.pathname + location.hash)
+  const isAllowedPage = () => {
+    const path = `${location.pathname}${location.hash}`
       .replace(/\/+$/, "")
       .toLowerCase();
 
     return (
-      path === "" ||
+      !path ||
       path === "/" ||
-      path.includes("home") ||
-      path.includes("main") ||
-      path.includes("index") ||
-      path.includes("dashboard")
+      ["home", "main", "index", "dashboard"].some((name) =>
+        path.includes(name)
+      )
     );
-  }
+  };
 
-  function canShowPopup() {
-    if (!isAllowedPage()) return false;
+  const isWaiting = () => {
+    try {
+      const lastClosed = Number(
+        localStorage.getItem(CONFIG.storageKey) || 0
+      );
 
-    const lastClosed = Number(
-      localStorage.getItem(DELAY_KEY) || 0
-    );
+      return Boolean(
+        lastClosed && Date.now() - lastClosed < CONFIG.delay
+      );
+    } catch (_) {
+      return false;
+    }
+  };
 
-    return !(
-      lastClosed &&
-      Date.now() - lastClosed < 3600000
-    );
-  }
-
-  function preloadImages() {
-    return Promise.all(
-      IMG.map(function (url) {
-        return new Promise(function (resolve) {
-          const img = new Image();
-
-          img.onload = resolve;
-          img.onerror = resolve;
-          img.src = url;
-
-          if (img.complete) resolve();
-        });
-      })
-    );
-  }
-
-  function injectStyle() {
-    if (document.getElementById(STYLE_ID)) return;
+  const addStyle = () => {
+    if (document.getElementById(IDS.style)) return;
 
     const style = document.createElement("style");
-    style.id = STYLE_ID;
-
+    style.id = IDS.style;
     style.textContent = `
-
       @keyframes rjnFadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
       }
 
-      @keyframes rjnSlideIn {
-        from {
-          transform: translateY(25px) scale(.97);
-          opacity: 0;
-        }
-
-        to {
-          transform: translateY(0) scale(1);
-          opacity: 1;
-        }
+      @keyframes rjnPopupIn {
+        from { opacity: 0; transform: translateY(20px) scale(.97); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
       }
 
-      /* EFEK BANNER MENGAMBANG */
-      @keyframes rjnBannerFloat {
-        0%,
-        100% {
-          transform: translate3d(0, 10px, 0);
-        }
-
-        50% {
-          transform: translate3d(0, -10px, 0);
-        }
-      }
-
-      @keyframes rjnPortalPulse {
-        0% {
-          transform: translate(-50%, -50%) scale(.25);
-          opacity: 0;
-
-          box-shadow:
-            0 0 0 0 rgba(20,255,110,0),
-            0 0 0 0 rgba(225,196,90,0);
-        }
-
-        35% {
-          opacity: 1;
-
-          transform:
-            translate(-50%, -50%)
-            scale(1);
-
-          box-shadow:
-            0 0 28px 12px rgba(20,255,110,.48),
-            0 0 60px 24px rgba(12,135,63,.28),
-            0 0 90px 30px rgba(225,196,90,.10);
-        }
-
-        100% {
-          opacity: 0;
-
-          transform:
-            translate(-50%, -50%)
-            scale(1.45);
-
-          box-shadow:
-            0 0 12px 2px rgba(20,255,110,0),
-            0 0 20px 4px rgba(12,135,63,0),
-            0 0 28px 6px rgba(225,196,90,0);
-        }
-      }
-
-      @keyframes rjnPopupExit {
-        0% {
-          transform:
-            translateY(0)
-            scale(1);
-
-          opacity: 1;
-
-          filter:
-            blur(0)
-            brightness(1);
-        }
-
-        28% {
-          transform:
-            translateY(-3px)
-            scale(1.018);
-
-          opacity: 1;
-
-          filter:
-            blur(0)
-            brightness(1.12);
-        }
-
-        100% {
-          transform:
-            translateY(0)
-            scale(.18);
-
-          opacity: 0;
-
-          filter:
-            blur(7px)
-            brightness(.85);
-        }
-      }
-
-      @keyframes rjnOverlayExit {
-        0% {
-          opacity: 1;
-
-          backdrop-filter: blur(8px);
-          -webkit-backdrop-filter: blur(8px);
-        }
-
-        55% {
-          opacity: .78;
-
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-        }
-
-        100% {
-          opacity: 0;
-
-          backdrop-filter: blur(0);
-          -webkit-backdrop-filter: blur(0);
-        }
+      @keyframes rjnFloat {
+        0%, 100% { transform: translate3d(0, 0, 0); }
+        50% { transform: translate3d(0, -6px, 0); }
       }
 
       @keyframes rjnShine {
+        from { background-position: 100% 0; }
+        to { background-position: -150% 0; }
+      }
+
+      @keyframes rjnSmokeFade {
         0% {
-          left: -50%;
+          opacity: 1;
+          transform: scale(1);
+          filter: blur(0) brightness(1);
         }
-
+        45% {
+          opacity: .72;
+          transform: scale(1.008);
+          filter: blur(2px) brightness(1.05);
+        }
         100% {
-          left: 130%;
+          opacity: 0;
+          transform: scale(1.025);
+          filter: blur(12px) brightness(1.12);
         }
       }
 
-      @keyframes rjnTitleShine {
+      @keyframes rjnSmokeCloud {
         0% {
-          background-position: 100% 0;
+          opacity: 0;
+          transform: translate(-50%, -50%) scale(.55);
         }
-
+        35% {
+          opacity: .58;
+        }
         100% {
-          background-position: -160% 0;
+          opacity: 0;
+          transform: translate(-50%, -54%) scale(1.55);
         }
       }
 
-      /* PORTAL PENUTUP */
-
-      #${POPUP_ID}::after {
-        content: "";
-
+      #${IDS.overlay} {
         position: fixed;
-
-        left: 50%;
-        top: 50%;
-
-        width: 190px;
-        height: 190px;
-
-        border-radius: 50%;
-
-        border:
-          2px solid
-          rgba(30,255,125,0);
-
-        background:
-          radial-gradient(
-            circle,
-            rgba(35,255,125,.24) 0%,
-            rgba(12,145,62,.16) 32%,
-            rgba(3,40,18,.04) 58%,
-            transparent 72%
-          );
-
-        opacity: 0;
-
-        pointer-events: none;
-
-        z-index: 2147483647;
-
-        transform:
-          translate(-50%, -50%)
-          scale(.25);
-      }
-
-      #${POPUP_ID}.pull-up::after {
-        animation:
-          rjnPortalPulse .72s
-          cubic-bezier(.22,.78,.18,1)
-          forwards;
-      }
-
-      /* OVERLAY */
-
-      #${OVERLAY_ID} {
-        position: fixed;
-
         inset: 0;
-
         z-index: 2147483646;
-
-        background:
-          radial-gradient(
-            circle at center,
-            rgba(6,70,30,.15),
-            transparent 45%
-          ),
-          linear-gradient(
-            180deg,
-            rgba(0,0,0,.45),
-            rgba(0,0,0,.88)
-          );
-
+        background: rgba(0, 0, 0, .72);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-
-        animation:
-          rjnFadeIn .35s
-          ease forwards;
+        animation: rjnFadeIn .25s ease both;
       }
 
-      #${OVERLAY_ID}.fade-out {
-        animation:
-          rjnOverlayExit .72s
-          cubic-bezier(.22,.78,.18,1)
-          forwards;
-      }
-
-      /* POPUP */
-
-      #${POPUP_ID} {
+      #${IDS.popup} {
         position: fixed;
-
         inset: 0;
-
         z-index: 2147483647;
-
         display: flex;
-
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-
-        flex-direction: column;
-
-        gap: 9px;
-
+        gap: 8px;
         padding: 12px;
-
-        box-sizing: border-box;
-
-        background: transparent;
-
         overflow-y: auto;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        animation: rjnPopupIn .35s ease both;
       }
 
-      #${POPUP_ID}.pull-up {
+      #${IDS.popup}::after {
+        content: "";
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        z-index: 9999;
+        width: min(420px, 78vw);
+        height: min(290px, 45vh);
+        border-radius: 50%;
         pointer-events: none;
+        opacity: 0;
+        background:
+          radial-gradient(circle at 28% 58%, rgba(255,255,255,.34), transparent 34%),
+          radial-gradient(circle at 67% 38%, rgba(95,255,165,.26), transparent 38%),
+          radial-gradient(circle at 52% 68%, rgba(220,255,235,.22), transparent 45%);
+        filter: blur(16px);
+        transform: translate(-50%, -50%) scale(.55);
       }
 
-      #${POPUP_ID}.pull-up > * {
-        animation:
-          rjnPopupExit .72s
-          cubic-bezier(.22,.78,.18,1)
-          forwards;
-
-        transform-origin:
-          center center;
-
-        will-change:
-          transform,
-          opacity,
-          filter;
+      #${IDS.popup}.rjn-closing > * {
+        animation: rjnSmokeFade .74s cubic-bezier(.4,0,.2,1) forwards !important;
       }
 
-      /* BANNER + EFEK MENGAMBANG */
+      #${IDS.popup}.rjn-closing::after {
+        animation: rjnSmokeCloud .78s ease-out forwards;
+      }
 
-      #rjn-popup-box {
+      #${IDS.overlay}.rjn-closing {
+        opacity: 0;
+        transition: opacity .78s ease;
+      }
+
+      .rjn-banner-box {
         position: relative;
-
-        animation:
-          rjnSlideIn .45s ease forwards,
-          rjnBannerFloat 5s
-          ease-in-out .45s infinite;
-
-        background: transparent;
-
-        border: none;
-
-        box-shadow: none;
-
-        filter:
-          drop-shadow(
-            0 12px 20px
-            rgba(0,0,0,.26)
-          )
-          drop-shadow(
-            0 0 9px
-            rgba(23,107,69,.13)
-          );
-
+        display: grid;
+        place-items: center;
+        animation: rjnFloat 5.5s cubic-bezier(.45,0,.55,1) infinite;
         will-change: transform;
       }
 
-      /* TOMBOL CLOSE */
-
-      #rjn-close {
-        position: absolute;
-
-        top: -13px;
-        right: -13px;
-
-        width: 34px;
-        height: 34px;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 50%;
-
-        cursor: pointer;
-
-        z-index: 9999;
-
-        color: #ffffff;
-
-        font-size: 17px;
-        font-weight: 900;
-
-        border:
-          1px solid #f1d878;
-
-        background:
-          linear-gradient(
-            145deg,
-            #19a84f,
-            #075f29 55%,
-            #032511
-          );
-
-        box-shadow:
-          0 0 10px rgba(28,255,109,.35),
-          0 0 18px rgba(218,185,75,.30),
-          0 5px 15px rgba(0,0,0,.55);
-
-        transition:
-          transform .2s ease,
-          filter .2s ease;
-      }
-
-      #rjn-close:hover {
-        transform: scale(1.08);
-
-        filter:
-          brightness(1.15);
-      }
-
-      /* GAMBAR BANNER */
-
-      #rjn-image-stage {
-        position: relative;
-
-        display: grid;
-
-        place-items: center;
-
-        max-width: 92vw;
-        max-height: 58vh;
-
-        overflow: hidden;
-
-        background: transparent;
-      }
-
-      #rjn-popup-img,
-      #rjn-popup-img-next {
-        grid-area: 1 / 1;
-
+      .rjn-banner {
         display: block;
-
-        max-width: 92vw;
-        max-height: 58vh;
-
         width: auto;
         height: auto;
-
+        max-width: 92vw;
+        max-height: 58vh;
         object-fit: contain;
-
-        border: none;
-        border-radius: 0;
-
         background: transparent;
-
-        box-shadow: none;
-
-        will-change:
-          transform,
-          opacity;
-      }
-
-      #rjn-popup-img {
-        position: relative;
-
-        z-index: 1;
-
+        filter: drop-shadow(0 12px 20px rgba(0,0,0,.28));
         opacity: 1;
-
-        transform:
-          translateX(0);
+        transform: scale(1);
+        transition: opacity .3s ease, transform .3s ease;
       }
 
-      #rjn-popup-img-next {
-        position: relative;
-
-        z-index: 2;
-
-        opacity: 0;
-
-        transform:
-          translateX(100%);
-
-        pointer-events: none;
+      .rjn-banner.rjn-changing {
+        opacity: .12;
+        transform: scale(.992);
       }
-
-      #rjn-popup-img-next.slide-rtl {
-        opacity: 1;
-
-        transform:
-          translateX(0);
-
-        transition:
-          transform .7s
-          cubic-bezier(.22,.8,.28,1),
-          opacity .3s ease;
-      }
-
-      #rjn-popup-img.slide-old-left {
-        opacity: .25;
-
-        transform:
-          translateX(-18%);
-
-        transition:
-          transform .7s
-          cubic-bezier(.22,.8,.28,1),
-          opacity .55s ease;
-      }
-
-      /* NAVIGASI BANNER */
 
       .rjn-nav {
         position: absolute;
-
         top: 50%;
-
-        transform:
-          translateY(-50%);
-
+        z-index: 2;
         width: 31px;
         height: 31px;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-
+        display: grid;
+        place-items: center;
         padding: 0;
-
+        border: 1px solid #e5c85e;
         border-radius: 50%;
-
-        border:
-          1px solid #e5c85e;
-
-        background:
-          linear-gradient(
-            180deg,
-            #159947,
-            #075e29 55%,
-            #032511
-          );
-
-        color: #ffffff;
-
+        color: #fff;
+        background: linear-gradient(180deg, #159947, #075e29 55%, #032511);
+        box-shadow: 0 0 12px rgba(25,220,91,.35);
         font-size: 24px;
         font-weight: 900;
-
         cursor: pointer;
-
-        z-index: 9998;
-
-        box-shadow:
-          0 0 12px rgba(25,220,91,.35),
-          0 0 18px rgba(214,184,79,.25);
-
-        transition:
-          transform .2s ease,
-          filter .2s ease;
+        transform: translateY(-50%);
       }
 
-      .rjn-nav:hover {
-        filter:
-          brightness(1.15);
-      }
+      .rjn-prev { left: 8px; }
+      .rjn-next { right: 8px; }
 
-      #rjn-prev {
-        left: 8px;
-      }
-
-      #rjn-next {
-        right: 8px;
-      }
-
-      /* DOT SLIDER */
-
-      #rjn-dots {
+      .rjn-dots {
         position: absolute;
-
         left: 50%;
         bottom: 10px;
-
-        transform:
-          translateX(-50%);
-
+        z-index: 2;
         display: flex;
-
-        align-items: center;
-        justify-content: center;
-
         gap: 7px;
-
-        z-index: 9998;
-
         padding: 5px 8px;
-
         border-radius: 20px;
-
-        background:
-          rgba(0,0,0,.35);
-
-        backdrop-filter:
-          blur(5px);
-
-        -webkit-backdrop-filter:
-          blur(5px);
+        background: rgba(0,0,0,.35);
+        transform: translateX(-50%);
       }
 
       .rjn-dot {
         width: 8px;
         height: 8px;
-
-        min-width: 8px;
-
         padding: 0;
-
-        border: none;
-
+        border: 0;
         border-radius: 50%;
-
-        background:
-          rgba(255,255,255,.55);
-
+        background: rgba(255,255,255,.55);
         cursor: pointer;
-
-        transition:
-          transform .2s ease,
-          background .2s ease;
       }
 
-      .rjn-dot.active {
-        background:
-          #e1c45a;
-
-        transform:
-          scale(1.35);
-
-        box-shadow:
-          0 0 10px
-          rgba(225,196,90,.9);
+      .rjn-dot.rjn-active {
+        background: #e1c45a;
+        box-shadow: 0 0 9px rgba(225,196,90,.9);
+        transform: scale(1.35);
       }
 
-      /* JUDUL MERAH PUTIH HIJAU */
+      .rjn-close {
+        position: absolute;
+        top: -13px;
+        right: -13px;
+        z-index: 2;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        padding: 0;
+        border: 1px solid #f1d878;
+        border-radius: 50%;
+        color: #fff;
+        background: linear-gradient(145deg, #19a84f, #075f29 55%, #032511);
+        box-shadow: 0 0 14px rgba(28,255,109,.35);
+        font-size: 17px;
+        font-weight: 900;
+        cursor: pointer;
+      }
 
-      #rjn-title {
-        display: inline-block;
+      .rjn-gifs {
+        width: min(360px, 92vw);
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+        align-items: center;
+      }
 
+      .rjn-gif,
+      .rjn-gif-link {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: contain;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .rjn-gif-link {
+        text-decoration: none;
+        transition: transform .18s ease, filter .18s ease;
+      }
+
+      .rjn-gif-link:hover {
+        transform: translateY(-2px) scale(1.025);
+        filter: brightness(1.1);
+      }
+
+      .rjn-gif-link .rjn-gif {
+        pointer-events: none;
+      }
+
+      .rjn-title {
+        color: transparent;
+        background: linear-gradient(
+          110deg,
+          #176b45 0%, #176b45 30%,
+          #d62828 43%, #fff 50%, #d62828 57%,
+          #176b45 70%, #176b45 100%
+        );
+        background-size: 250% 100%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         font-size: 15px;
         font-weight: 900;
-
-        letter-spacing: 1.8px;
-
+        letter-spacing: 1.6px;
         text-align: center;
-
-        color: #ffffff;
-
-        background:
-          linear-gradient(
-            110deg,
-            #176b45 0%,
-            #176b45 30%,
-            #d62828 43%,
-            #ffffff 50%,
-            #d62828 57%,
-            #176b45 70%,
-            #176b45 100%
-          );
-
-        background-size:
-          260% 100%;
-
-        background-position:
-          100% 0;
-
-        -webkit-background-clip:
-          text;
-
-        background-clip:
-          text;
-
-        -webkit-text-fill-color:
-          transparent;
-
-        -webkit-text-stroke:
-          .25px
-          rgba(255,255,255,.18);
-
-        text-shadow:
-          0 1px 2px rgba(0,0,0,.72),
-          0 0 8px rgba(23,107,69,.22);
-
-        filter:
-          drop-shadow(
-            0 1px 1px
-            rgba(0,0,0,.62)
-          )
-          drop-shadow(
-            0 0 5px
-            rgba(214,40,40,.16)
-          );
-
-        animation:
-          rjnTitleShine 4.2s
-          cubic-bezier(.45,0,.55,1)
-          infinite;
-
-        will-change:
-          background-position;
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,.55));
+        animation: rjnShine 4.2s linear infinite;
       }
 
-      /* BUTTON */
-
-      .rjn-btn-row {
-        width: 310px;
-
+      .rjn-buttons {
+        width: min(310px, 92vw);
         display: flex;
-
         flex-wrap: wrap;
-
-        gap: 8px;
-
-        align-items: center;
         justify-content: center;
-
-        margin-top: 2px;
-      }
-
-      .rjn-btn,
-      .rjn-ok {
-        position: relative;
-
-        overflow: hidden;
-
-        cursor: pointer;
-
-        text-align: center;
-
-        font-weight: 900;
-
-        color: #ffffff !important;
-
-        box-sizing: border-box;
-
-        transition:
-          transform .18s ease,
-          filter .18s ease;
+        gap: 8px;
       }
 
       .rjn-btn {
         width: 148px;
-
         padding: 12px 0;
-
+        box-sizing: border-box;
+        border: 1px solid rgba(255,225,125,.95);
         border-radius: 14px;
-
-        font-size: 12px;
-
-        white-space: nowrap;
-
+        color: #fff !important;
+        background: linear-gradient(180deg, #52e98c, #12a956 62%, #08783b);
+        box-shadow: 0 5px 14px rgba(0,0,0,.28);
+        text-align: center;
         text-decoration: none;
-
-        letter-spacing: .4px;
-
-        background:
-          linear-gradient(
-            180deg,
-            #52e98c 0%,
-            #27c96b 28%,
-            #12a956 62%,
-            #08783b 100%
-          );
-
-        border:
-          1px solid
-          rgba(255,225,125,.95);
-
-        box-shadow:
-          0 0 12px rgba(55,230,125,.32),
-          0 5px 14px rgba(0,0,0,.28),
-          inset 0 1px 0 rgba(255,255,255,.42),
-          inset 0 -2px 5px rgba(0,95,42,.20);
+        font-size: 12px;
+        font-weight: 900;
+        cursor: pointer;
       }
 
-      .rjn-btn.rjn-rtp {
-        background:
-          linear-gradient(
-            180deg,
-            #ffe99a 0%,
-            #e8c75f 30%,
-            #c99b2f 67%,
-            #a97818 100%
-          );
-
-        color:
-          #ffffff !important;
-
-        border:
-          1px solid
-          rgba(255,244,190,.98);
-
-        box-shadow:
-          0 0 12px rgba(244,210,100,.30),
-          0 5px 14px rgba(0,0,0,.26),
-          inset 0 1px 0 rgba(255,255,255,.60),
-          inset 0 -2px 5px rgba(120,78,0,.18);
-
-        text-shadow:
-          0 1px 3px
-          rgba(85,55,0,.45);
+      .rjn-btn.rjn-gold,
+      .rjn-btn.rjn-ok {
+        background: linear-gradient(180deg, #ffe99a, #c99b2f 67%, #a97818);
       }
 
-      .rjn-ok {
+      .rjn-btn.rjn-ok {
         width: 120px;
-
         padding: 11px 0;
-
-        border-radius: 14px;
-
-        font-size: 13px;
-
-        background:
-          linear-gradient(
-            180deg,
-            #fff0ad 0%,
-            #e9ca68 32%,
-            #c99d35 68%,
-            #a9791d 100%
-          );
-
-        border:
-          1px solid #fff7cf;
-
-        box-shadow:
-          0 0 12px rgba(232,202,104,.34),
-          0 5px 14px rgba(0,0,0,.25),
-          inset 0 1px 0 rgba(255,255,255,.62),
-          inset 0 -2px 5px rgba(120,78,0,.16);
-
-        text-shadow:
-          0 1px 3px
-          rgba(85,55,0,.42);
       }
 
-      .rjn-btn:hover,
-      .rjn-ok:hover {
-        transform:
-          translateY(-1px)
-          scale(1.035);
-
-        filter:
-          brightness(1.12);
+      .rjn-btn:hover {
+        transform: translateY(-1px) scale(1.03);
+        filter: brightness(1.1);
       }
-
-      .rjn-btn:active,
-      .rjn-ok:active {
-        transform:
-          scale(.96);
-      }
-
-      .rjn-btn::before,
-      .rjn-ok::before {
-        content: "";
-
-        position: absolute;
-
-        top: 0;
-        left: -50%;
-
-        width: 28%;
-        height: 100%;
-
-        background:
-          linear-gradient(
-            120deg,
-            rgba(255,255,255,0),
-            rgba(255,242,181,.9),
-            rgba(255,255,255,0)
-          );
-
-        transform:
-          skewX(-25deg);
-
-        animation:
-          rjnShine 1.8s
-          linear infinite;
-      }
-
-      /* MATIKAN ANIMASI JIKA PERANGKAT MEMINTA */
-
-      @media (prefers-reduced-motion: reduce) {
-        #rjn-title {
-          animation: none;
-
-          background-position:
-            50% 0;
-        }
-
-        #rjn-popup-box {
-          animation:
-            rjnSlideIn .45s
-            ease forwards;
-        }
-      }
-
-      /* MOBILE */
 
       @media (max-width: 768px) {
-        #${POPUP_ID} {
-          gap: 8px;
+        #${IDS.popup} { padding: 10px; }
+        .rjn-banner { max-width: 94vw; max-height: 55vh; }
+        .rjn-gifs { width: min(330px, 92vw); gap: 6px; }
+        .rjn-title { font-size: 13px; letter-spacing: 1.1px; }
+        .rjn-btn { width: 146px; padding: 11px 0; font-size: 11px; }
+      }
 
-          padding: 10px;
-        }
-
-        #rjn-image-stage,
-        #rjn-popup-img,
-        #rjn-popup-img-next {
-          max-width: 94vw;
-          max-height: 55vh;
-        }
-
-        .rjn-btn-row {
-          width:
-            min(310px, 94vw);
-
-          gap: 7px;
-        }
-
-        .rjn-btn {
-          width: 146px;
-
-          padding: 11px 0;
-
-          font-size: 11px;
-        }
-
-        .rjn-ok {
-          width: 115px;
-
-          padding: 10px 0;
-        }
-
-        #rjn-title {
-          font-size: 13px;
-
-          letter-spacing: 1.2px;
-        }
+      @media (prefers-reduced-motion: reduce) {
+        .rjn-banner-box,
+        .rjn-title { animation: none; }
       }
     `;
 
     document.head.appendChild(style);
-  }
+  };
 
-  async function createPopup() {
+  const buildGifs = () =>
+    CONFIG.gifs
+      .map((item, index) => {
+        const image = `
+          <img
+            class="rjn-gif"
+            src="${item.src}"
+            alt="RAJANAGA99 GIF ${index + 1}"
+            loading="eager"
+            decoding="async"
+            draggable="false"
+          >`;
+
+        return item.href
+          ? `<a
+               class="rjn-gif-link"
+               href="${item.href}"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="${item.label || "Buka link"}"
+             >${image}</a>`
+          : image;
+      })
+      .join("");
+
+  const showPopup = () => {
     if (
-      popupCreated ||
-      !canShowPopup() ||
-      !document.body
+      !document.body ||
+      !isAllowedPage() ||
+      isWaiting() ||
+      document.getElementById(IDS.popup)
     ) {
       return;
     }
 
-    popupCreated = true;
+    addStyle();
 
-    injectStyle();
+    const overlay = document.createElement("div");
+    overlay.id = IDS.overlay;
 
-    await preloadImages();
-
-    if (document.getElementById(POPUP_ID)) {
-      popupCreated = false;
-      return;
-    }
-
-    const overlay =
-      document.createElement("div");
-
-    overlay.id =
-      OVERLAY_ID;
-
-    const popup =
-      document.createElement("div");
-
-    popup.id =
-      POPUP_ID;
-
+    const popup = document.createElement("div");
+    popup.id = IDS.popup;
     popup.innerHTML = `
-      <div id="rjn-popup-box">
-
-        <div
-          id="rjn-close"
-          title="Tutup"
-          role="button"
-          aria-label="Tutup popup"
-        >
-          ✕
-        </div>
-
-        <button
-          type="button"
-          class="rjn-nav"
-          id="rjn-prev"
-          aria-label="Banner sebelumnya"
-        >
-          ‹
-        </button>
-
-        <div id="rjn-image-stage">
-
-          <img
-            id="rjn-popup-img"
-            src="${IMG[0]}"
-            alt="RAJANAGA99 Banner 1"
-          >
-
-          <img
-            id="rjn-popup-img-next"
-            src=""
-            alt=""
-            aria-hidden="true"
-          >
-
-        </div>
-
-        <button
-          type="button"
-          class="rjn-nav"
-          id="rjn-next"
-          aria-label="Banner berikutnya"
-        >
-          ›
-        </button>
-
-        <div id="rjn-dots"></div>
-
+      <div class="rjn-banner-box">
+        <button class="rjn-close" type="button" aria-label="Tutup popup">✕</button>
+        <button class="rjn-nav rjn-prev" type="button" aria-label="Banner sebelumnya">‹</button>
+        <img class="rjn-banner" src="${CONFIG.banners[0]}" alt="RAJANAGA99 Banner 1">
+        <button class="rjn-nav rjn-next" type="button" aria-label="Banner berikutnya">›</button>
+        <div class="rjn-dots" aria-label="Pilihan banner"></div>
       </div>
 
-      <div id="rjn-title">
-        RAJANAGA99 • DIRGAHAYU INDONESIA
+      <div class="rjn-gifs" aria-label="Pilihan game RAJANAGA99">
+        ${buildGifs()}
       </div>
 
-      <div class="rjn-btn-row">
+      <div class="rjn-title">RAJANAGA99 • DIRGAHAYU INDONESIA</div>
 
-        <a
-          class="rjn-btn"
-          href="https://linkshortener.vip/rajanaga99-livechat"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          🎁 CLAIM BONUS
+      <div class="rjn-buttons">
+        <a class="rjn-btn" href="${CONFIG.liveChat}" target="_blank" rel="noopener noreferrer">
+          💬 LIVE CHAT
         </a>
-
-        <a
-          class="rjn-btn rjn-rtp"
-          href="https://linkshortener.vip/rajanaga99-rtp"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a class="rjn-btn rjn-gold" href="${CONFIG.rtp}" target="_blank" rel="noopener noreferrer">
           📊 RTP
         </a>
-
-        <button
-          type="button"
-          class="rjn-ok"
-          id="rjn-ok"
-        >
-          OK
-        </button>
-
+        <button class="rjn-btn rjn-ok" type="button">OK</button>
       </div>
     `;
 
-    document.body.appendChild(overlay);
-    document.body.appendChild(popup);
+    document.body.append(overlay, popup);
 
-    const sliderImage =
-      document.getElementById(
-        "rjn-popup-img"
-      );
+    CONFIG.banners.forEach((src) => {
+      const image = new Image();
+      image.src = src;
+    });
 
-    const nextSliderImage =
-      document.getElementById(
-        "rjn-popup-img-next"
-      );
+    const bannerImage = popup.querySelector(".rjn-banner");
+    const dots = popup.querySelector(".rjn-dots");
+    let bannerIndex = 0;
+    let bannerTimer = null;
+    let bannerChanging = false;
 
-    const dotsContainer =
-      document.getElementById(
-        "rjn-dots"
-      );
+    const renderDots = () => {
+      dots.innerHTML = CONFIG.banners
+        .map(
+          (_, index) =>
+            `<button
+               class="rjn-dot${index === bannerIndex ? " rjn-active" : ""}"
+               type="button"
+               data-index="${index}"
+               aria-label="Tampilkan banner ${index + 1}"
+             ></button>`
+        )
+        .join("");
+    };
 
-    function renderDots() {
-      dotsContainer.innerHTML = "";
+    const changeBanner = (nextIndex) => {
+      if (nextIndex === bannerIndex || bannerChanging) return;
 
-      IMG.forEach(
-        function (_, imageIndex) {
-          const dot =
-            document.createElement(
-              "button"
-            );
+      bannerChanging = true;
+      bannerImage.classList.add("rjn-changing");
 
-          dot.type =
-            "button";
-
-          dot.className =
-            "rjn-dot" +
-            (
-              imageIndex === currentIndex
-                ? " active"
-                : ""
-            );
-
-          dot.setAttribute(
-            "aria-label",
-            "Tampilkan banner " +
-              (imageIndex + 1)
-          );
-
-          dot.addEventListener(
-            "click",
-            function () {
-              changeSlide(imageIndex);
-              resetSliderTimer();
-            }
-          );
-
-          dotsContainer.appendChild(dot);
-        }
-      );
-    }
-
-    function changeSlide(newIndex) {
-      if (
-        changingSlide ||
-        newIndex < 0 ||
-        newIndex >= IMG.length ||
-        newIndex === currentIndex
-      ) {
-        return;
-      }
-
-      changingSlide = true;
-
-      nextSliderImage.classList.remove(
-        "slide-rtl"
-      );
-
-      sliderImage.classList.remove(
-        "slide-old-left"
-      );
-
-      nextSliderImage.src =
-        IMG[newIndex];
-
-      nextSliderImage.alt =
-        "RAJANAGA99 Banner " +
-        (newIndex + 1);
-
-      nextSliderImage.style.transition =
-        "none";
-
-      nextSliderImage.style.opacity =
-        "0";
-
-      nextSliderImage.style.transform =
-        "translateX(100%)";
-
-      void nextSliderImage.offsetWidth;
-
-      nextSliderImage.style.transition =
-        "";
-
-      nextSliderImage.style.opacity =
-        "";
-
-      nextSliderImage.style.transform =
-        "";
-
-      sliderImage.classList.add(
-        "slide-old-left"
-      );
-
-      nextSliderImage.classList.add(
-        "slide-rtl"
-      );
-
-      let finished = false;
-
-      function finishSlide() {
-        if (finished) return;
-
-        finished = true;
-
-        nextSliderImage.removeEventListener(
-          "transitionend",
-          handleTransitionEnd
-        );
-
-        currentIndex =
-          newIndex;
-
-        sliderImage.src =
-          IMG[currentIndex];
-
-        sliderImage.alt =
-          "RAJANAGA99 Banner " +
-          (currentIndex + 1);
-
-        sliderImage.classList.remove(
-          "slide-old-left"
-        );
-
-        sliderImage.style.transition =
-          "none";
-
-        sliderImage.style.opacity =
-          "1";
-
-        sliderImage.style.transform =
-          "translateX(0)";
-
-        requestAnimationFrame(
-          function () {
-            requestAnimationFrame(
-              function () {
-                nextSliderImage.style.transition =
-                  "none";
-
-                nextSliderImage.classList.remove(
-                  "slide-rtl"
-                );
-
-                nextSliderImage.style.opacity =
-                  "0";
-
-                nextSliderImage.style.transform =
-                  "translateX(100%)";
-
-                nextSliderImage.src =
-                  "";
-
-                nextSliderImage.alt =
-                  "";
-
-                requestAnimationFrame(
-                  function () {
-                    sliderImage.style.transition =
-                      "";
-
-                    sliderImage.style.opacity =
-                      "";
-
-                    sliderImage.style.transform =
-                      "";
-
-                    nextSliderImage.style.transition =
-                      "";
-
-                    nextSliderImage.style.opacity =
-                      "";
-
-                    nextSliderImage.style.transform =
-                      "";
-
-                    changingSlide =
-                      false;
-                  }
-                );
-              }
-            );
-          }
-        );
-
+      window.setTimeout(() => {
+        bannerIndex =
+          (nextIndex + CONFIG.banners.length) % CONFIG.banners.length;
+        bannerImage.src = CONFIG.banners[bannerIndex];
+        bannerImage.alt = `RAJANAGA99 Banner ${bannerIndex + 1}`;
         renderDots();
-      }
 
-      function handleTransitionEnd(event) {
-        if (
-          event.target === nextSliderImage &&
-          event.propertyName === "transform"
-        ) {
-          finishSlide();
-        }
-      }
-
-      nextSliderImage.addEventListener(
-        "transitionend",
-        handleTransitionEnd
-      );
-
-      window.setTimeout(
-        finishSlide,
-        900
-      );
-    }
-
-    function nextSlide() {
-      const nextIndex =
-        (currentIndex + 1) %
-        IMG.length;
-
-      changeSlide(nextIndex);
-    }
-
-    function previousSlide() {
-      const previousIndex =
-        (
-          currentIndex -
-          1 +
-          IMG.length
-        ) % IMG.length;
-
-      changeSlide(previousIndex);
-    }
-
-    function startSliderTimer() {
-      clearInterval(sliderTimer);
-
-      if (IMG.length <= 1) return;
-
-      sliderTimer =
-        setInterval(
-          nextSlide,
-          SLIDER_INTERVAL
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            bannerImage.classList.remove("rjn-changing");
+            bannerChanging = false;
+          })
         );
-    }
+      }, 220);
+    };
 
-    function resetSliderTimer() {
-      startSliderTimer();
-    }
-
-    function closePopup() {
-      clearInterval(sliderTimer);
-
-      popup.classList.add(
-        "pull-up"
+    const startSlider = () => {
+      clearInterval(bannerTimer);
+      bannerTimer = window.setInterval(
+        () => changeBanner(bannerIndex + 1),
+        CONFIG.slideDelay
       );
+    };
 
-      overlay.classList.add(
-        "fade-out"
-      );
+    const selectBanner = (index) => {
+      changeBanner(index);
+      startSlider();
+    };
 
-      try {
-        localStorage.setItem(
-          DELAY_KEY,
-          String(Date.now())
-        );
-      } catch (error) {
-        /* Abaikan jika localStorage diblokir */
-      }
-
-      setTimeout(
-        function () {
-          popup.remove();
-          overlay.remove();
-
-          popupCreated = false;
-        },
-        740
-      );
-    }
-
-    document
-      .getElementById("rjn-prev")
-      .addEventListener(
-        "click",
-        function () {
-          previousSlide();
-          resetSliderTimer();
-        }
-      );
-
-    document
-      .getElementById("rjn-next")
-      .addEventListener(
-        "click",
-        function () {
-          nextSlide();
-          resetSliderTimer();
-        }
-      );
-
-    document
-      .getElementById("rjn-close")
-      .addEventListener(
-        "click",
-        closePopup
-      );
-
-    document
-      .getElementById("rjn-ok")
-      .addEventListener(
-        "click",
-        closePopup
-      );
-
-    overlay.addEventListener(
-      "click",
-      closePopup
+    popup.querySelector(".rjn-prev").addEventListener("click", () =>
+      selectBanner(bannerIndex - 1)
     );
+    popup.querySelector(".rjn-next").addEventListener("click", () =>
+      selectBanner(bannerIndex + 1)
+    );
+    dots.addEventListener("click", (event) => {
+      const dot = event.target.closest(".rjn-dot");
+      if (dot) selectBanner(Number(dot.dataset.index));
+    });
 
     renderDots();
+    startSlider();
 
-    if (IMG.length > 1) {
-      startSliderTimer();
-    }
-  }
+    let isClosing = false;
 
-  function initPopup() {
-    if (!document.body) return;
+    const closePopup = () => {
+      if (isClosing) return;
+      isClosing = true;
+      clearInterval(bannerTimer);
 
-    createPopup();
-  }
-
-  if (
-    document.readyState === "loading"
-  ) {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initPopup,
-      { once: true }
-    );
-  } else {
-    initPopup();
-  }
-
-  let lastPath =
-    location.pathname;
-
-  const observer =
-    new MutationObserver(
-      function () {
-        if (
-          location.pathname !== lastPath
-        ) {
-          lastPath =
-            location.pathname;
-
-          window.setTimeout(
-            function () {
-              if (
-                !document.getElementById(
-                  POPUP_ID
-                )
-              ) {
-                createPopup();
-              }
-            },
-            300
-          );
-        }
+      try {
+        localStorage.setItem(CONFIG.storageKey, String(Date.now()));
+      } catch (_) {
+        /* Popup tetap dapat ditutup jika localStorage diblokir. */
       }
-    );
 
-  observer.observe(
-    document.documentElement,
-    {
+      popup.classList.add("rjn-closing");
+      overlay.classList.add("rjn-closing");
+
+      window.setTimeout(() => {
+        popup.remove();
+        overlay.remove();
+      }, 800);
+    };
+
+    popup.querySelector(".rjn-close").addEventListener("click", closePopup);
+    popup.querySelector(".rjn-ok").addEventListener("click", closePopup);
+    popup.addEventListener("click", (event) => {
+      if (event.target === popup) closePopup();
+    });
+  };
+
+  const init = () => {
+    showPopup();
+
+    let currentUrl = location.href;
+    new MutationObserver(() => {
+      if (location.href === currentUrl) return;
+      currentUrl = location.href;
+      window.setTimeout(showPopup, 300);
+    }).observe(document.documentElement, {
       childList: true,
       subtree: true
-    }
-  );
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+  } else {
+    init();
+  }
 })();
