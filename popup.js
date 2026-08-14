@@ -2,9 +2,9 @@
 
 (function () {
   const IMG = [
-    "http://plcl.me/images/kJb4W.png",
-    "http://plcl.me/images/RCDaF.png",
-    "http://plcl.me/images/4bMCR.png"
+    "http://plcl.me/images/gZUYy.png",
+    "",
+    ""
   ];
 
   const DELAY_KEY = "rjn_popup_delay_1h";
