@@ -92,11 +92,11 @@
       @keyframes rjnBannerFloat {
         0%,
         100% {
-          transform: translateY(0) scale(1);
+          transform: translate3d(0, 10px, 0);
         }
 
         50% {
-          transform: translateY(-5px) scale(1.003);
+          transform: translate3d(0, -10px, 0);
         }
       }
 
