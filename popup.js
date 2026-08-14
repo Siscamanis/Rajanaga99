@@ -7,10 +7,6 @@
     "http://plcl.me/images/4bMCR.png"
   ];
 
-  /* ==============================
-     SETTING RAJANAGA99
-  ============================== */
-
   const DELAY_KEY = "rjn_popup_delay_1h";
   const SLIDER_INTERVAL = 7000;
 
@@ -22,10 +18,6 @@
   let currentIndex = 0;
   let sliderTimer = null;
   let changingSlide = false;
-
-  /* ==============================
-     CEK HALAMAN
-  ============================== */
 
   function isAllowedPage() {
     const path = (location.pathname + location.hash)
@@ -55,10 +47,6 @@
     );
   }
 
-  /* ==============================
-     PRELOAD GAMBAR
-  ============================== */
-
   function preloadImages() {
     return Promise.all(
       IMG.map(function (url) {
@@ -69,17 +57,11 @@
           img.onerror = resolve;
           img.src = url;
 
-          if (img.complete) {
-            resolve();
-          }
+          if (img.complete) resolve();
         });
       })
     );
   }
-
-  /* ==============================
-     CSS RAJANAGA99
-  ============================== */
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -94,11 +76,6 @@
         to { opacity: 1; }
       }
 
-      @keyframes rjnFadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-      }
-
       @keyframes rjnSlideIn {
         from {
           transform: translateY(25px) scale(.97);
@@ -111,10 +88,23 @@
         }
       }
 
+      /* EFEK BANNER MENGAMBANG */
+      @keyframes rjnBannerFloat {
+        0%,
+        100% {
+          transform: translateY(0) scale(1);
+        }
+
+        50% {
+          transform: translateY(-5px) scale(1.003);
+        }
+      }
+
       @keyframes rjnPortalPulse {
         0% {
           transform: translate(-50%, -50%) scale(.25);
           opacity: 0;
+
           box-shadow:
             0 0 0 0 rgba(20,255,110,0),
             0 0 0 0 rgba(225,196,90,0);
@@ -122,7 +112,11 @@
 
         35% {
           opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
+
+          transform:
+            translate(-50%, -50%)
+            scale(1);
+
           box-shadow:
             0 0 28px 12px rgba(20,255,110,.48),
             0 0 60px 24px rgba(12,135,63,.28),
@@ -131,7 +125,11 @@
 
         100% {
           opacity: 0;
-          transform: translate(-50%, -50%) scale(1.45);
+
+          transform:
+            translate(-50%, -50%)
+            scale(1.45);
+
           box-shadow:
             0 0 12px 2px rgba(20,255,110,0),
             0 0 20px 4px rgba(12,135,63,0),
@@ -144,7 +142,9 @@
           transform:
             translateY(0)
             scale(1);
+
           opacity: 1;
+
           filter:
             blur(0)
             brightness(1);
@@ -154,7 +154,9 @@
           transform:
             translateY(-3px)
             scale(1.018);
+
           opacity: 1;
+
           filter:
             blur(0)
             brightness(1.12);
@@ -164,7 +166,9 @@
           transform:
             translateY(0)
             scale(.18);
+
           opacity: 0;
+
           filter:
             blur(7px)
             brightness(.85);
@@ -174,27 +178,53 @@
       @keyframes rjnOverlayExit {
         0% {
           opacity: 1;
+
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
         }
 
         55% {
           opacity: .78;
+
           backdrop-filter: blur(10px);
           -webkit-backdrop-filter: blur(10px);
         }
 
         100% {
           opacity: 0;
+
           backdrop-filter: blur(0);
           -webkit-backdrop-filter: blur(0);
         }
       }
 
-      /* Portal glow muncul tepat di tengah saat popup ditutup */
+      @keyframes rjnShine {
+        0% {
+          left: -50%;
+        }
+
+        100% {
+          left: 130%;
+        }
+      }
+
+      @keyframes rjnTitleShine {
+        0% {
+          background-position: 100% 0;
+        }
+
+        100% {
+          background-position: -160% 0;
+        }
+      }
+
+      /* PORTAL PENUTUP */
+
       #${POPUP_ID}::after {
         content: "";
+
         position: fixed;
+
         left: 50%;
         top: 50%;
 
@@ -204,7 +234,8 @@
         border-radius: 50%;
 
         border:
-          2px solid rgba(30,255,125,.0);
+          2px solid
+          rgba(30,255,125,0);
 
         background:
           radial-gradient(
@@ -218,10 +249,12 @@
         opacity: 0;
 
         pointer-events: none;
+
         z-index: 2147483647;
 
         transform:
-          translate(-50%, -50%) scale(.25);
+          translate(-50%, -50%)
+          scale(.25);
       }
 
       #${POPUP_ID}.pull-up::after {
@@ -231,22 +264,11 @@
           forwards;
       }
 
-      @keyframes rjnShine {
-        0% {
-          left: -50%;
-        }
-
-        100% {
-          left: 130%;
-        }
-      }
-
-      /* ==============================
-         OVERLAY
-      ============================== */
+      /* OVERLAY */
 
       #${OVERLAY_ID} {
         position: fixed;
+
         inset: 0;
 
         z-index: 2147483646;
@@ -254,7 +276,7 @@
         background:
           radial-gradient(
             circle at center,
-            rgba(6, 70, 30, .15),
+            rgba(6,70,30,.15),
             transparent 45%
           ),
           linear-gradient(
@@ -267,7 +289,8 @@
         -webkit-backdrop-filter: blur(8px);
 
         animation:
-          rjnFadeIn .35s ease forwards;
+          rjnFadeIn .35s
+          ease forwards;
       }
 
       #${OVERLAY_ID}.fade-out {
@@ -277,19 +300,20 @@
           forwards;
       }
 
-      /* ==============================
-         POPUP
-      ============================== */
+      /* POPUP */
 
       #${POPUP_ID} {
         position: fixed;
+
         inset: 0;
 
         z-index: 2147483647;
 
         display: flex;
+
         align-items: center;
         justify-content: center;
+
         flex-direction: column;
 
         gap: 9px;
@@ -312,29 +336,46 @@
           rjnPopupExit .72s
           cubic-bezier(.22,.78,.18,1)
           forwards;
-        transform-origin: center center;
+
+        transform-origin:
+          center center;
+
         will-change:
           transform,
           opacity,
           filter;
       }
 
+      /* BANNER + EFEK MENGAMBANG */
+
       #rjn-popup-box {
         position: relative;
 
         animation:
-          rjnSlideIn .45s ease forwards;
+          rjnSlideIn .45s ease forwards,
+          rjnBannerFloat 5s
+          ease-in-out .45s infinite;
 
         background: transparent;
 
         border: none;
 
         box-shadow: none;
+
+        filter:
+          drop-shadow(
+            0 12px 20px
+            rgba(0,0,0,.26)
+          )
+          drop-shadow(
+            0 0 9px
+            rgba(23,107,69,.13)
+          );
+
+        will-change: transform;
       }
 
-      /* ==============================
-         CLOSE
-      ============================== */
+      /* TOMBOL CLOSE */
 
       #rjn-close {
         position: absolute;
@@ -346,6 +387,7 @@
         height: 34px;
 
         display: flex;
+
         align-items: center;
         justify-content: center;
 
@@ -383,17 +425,18 @@
 
       #rjn-close:hover {
         transform: scale(1.08);
-        filter: brightness(1.15);
+
+        filter:
+          brightness(1.15);
       }
 
-      /* ==============================
-         IMAGE STAGE
-      ============================== */
+      /* GAMBAR BANNER */
 
       #rjn-image-stage {
         position: relative;
 
         display: grid;
+
         place-items: center;
 
         max-width: 92vw;
@@ -419,7 +462,6 @@
         object-fit: contain;
 
         border: none;
-
         border-radius: 0;
 
         background: transparent;
@@ -479,9 +521,7 @@
           opacity .55s ease;
       }
 
-      /* ==============================
-         NAVIGATION
-      ============================== */
+      /* NAVIGASI BANNER */
 
       .rjn-nav {
         position: absolute;
@@ -495,6 +535,7 @@
         height: 31px;
 
         display: flex;
+
         align-items: center;
         justify-content: center;
 
@@ -532,7 +573,8 @@
       }
 
       .rjn-nav:hover {
-        filter: brightness(1.15);
+        filter:
+          brightness(1.15);
       }
 
       #rjn-prev {
@@ -543,9 +585,7 @@
         right: 8px;
       }
 
-      /* ==============================
-         DOT SLIDER
-      ============================== */
+      /* DOT SLIDER */
 
       #rjn-dots {
         position: absolute;
@@ -557,6 +597,7 @@
           translateX(-50%);
 
         display: flex;
+
         align-items: center;
         justify-content: center;
 
@@ -564,8 +605,7 @@
 
         z-index: 9998;
 
-        padding:
-          5px 8px;
+        padding: 5px 8px;
 
         border-radius: 20px;
 
@@ -573,6 +613,9 @@
           rgba(0,0,0,.35);
 
         backdrop-filter:
+          blur(5px);
+
+        -webkit-backdrop-filter:
           blur(5px);
       }
 
@@ -610,34 +653,75 @@
           rgba(225,196,90,.9);
       }
 
-      /* ==============================
-         TITLE
-      ============================== */
+      /* JUDUL MERAH PUTIH HIJAU */
 
       #rjn-title {
-        font-size: 15px;
+        display: inline-block;
 
+        font-size: 15px;
         font-weight: 900;
 
-        color:
-          #f5df8b;
-
-        letter-spacing:
-          1.8px;
+        letter-spacing: 1.8px;
 
         text-align: center;
 
+        color: #ffffff;
+
+        background:
+          linear-gradient(
+            110deg,
+            #176b45 0%,
+            #176b45 30%,
+            #d62828 43%,
+            #ffffff 50%,
+            #d62828 57%,
+            #176b45 70%,
+            #176b45 100%
+          );
+
+        background-size:
+          260% 100%;
+
+        background-position:
+          100% 0;
+
+        -webkit-background-clip:
+          text;
+
+        background-clip:
+          text;
+
+        -webkit-text-fill-color:
+          transparent;
+
+        -webkit-text-stroke:
+          .25px
+          rgba(255,255,255,.18);
+
         text-shadow:
-          0 0 8px
-          rgba(214,184,79,.75),
-          0 0 20px
-          rgba(21,153,71,.35);
+          0 1px 2px rgba(0,0,0,.72),
+          0 0 8px rgba(23,107,69,.22);
+
+        filter:
+          drop-shadow(
+            0 1px 1px
+            rgba(0,0,0,.62)
+          )
+          drop-shadow(
+            0 0 5px
+            rgba(214,40,40,.16)
+          );
+
+        animation:
+          rjnTitleShine 4.2s
+          cubic-bezier(.45,0,.55,1)
+          infinite;
+
+        will-change:
+          background-position;
       }
 
-    
-      /* ==============================
-         BUTTON
-      ============================== */
+      /* BUTTON */
 
       .rjn-btn-row {
         width: 310px;
@@ -678,23 +762,17 @@
       .rjn-btn {
         width: 148px;
 
-        padding:
-          12px 0;
+        padding: 12px 0;
 
-        border-radius:
-          14px;
+        border-radius: 14px;
 
-        font-size:
-          12px;
+        font-size: 12px;
 
-        white-space:
-          nowrap;
+        white-space: nowrap;
 
-        text-decoration:
-          none;
+        text-decoration: none;
 
-        letter-spacing:
-          .4px;
+        letter-spacing: .4px;
 
         background:
           linear-gradient(
@@ -716,7 +794,6 @@
           inset 0 -2px 5px rgba(0,95,42,.20);
       }
 
-      /* RTP - BRIGHT CHAMPAGNE GOLD */
       .rjn-btn.rjn-rtp {
         background:
           linear-gradient(
@@ -727,10 +804,12 @@
             #a97818 100%
           );
 
-        color: #ffffff !important;
+        color:
+          #ffffff !important;
 
         border:
-          1px solid rgba(255,244,190,.98);
+          1px solid
+          rgba(255,244,190,.98);
 
         box-shadow:
           0 0 12px rgba(244,210,100,.30),
@@ -739,20 +818,18 @@
           inset 0 -2px 5px rgba(120,78,0,.18);
 
         text-shadow:
-          0 1px 3px rgba(85,55,0,.45);
+          0 1px 3px
+          rgba(85,55,0,.45);
       }
 
       .rjn-ok {
         width: 120px;
 
-        padding:
-          11px 0;
+        padding: 11px 0;
 
-        border-radius:
-          14px;
+        border-radius: 14px;
 
-        font-size:
-          13px;
+        font-size: 13px;
 
         background:
           linear-gradient(
@@ -764,8 +841,7 @@
           );
 
         border:
-          1px solid
-          #fff7cf;
+          1px solid #fff7cf;
 
         box-shadow:
           0 0 12px rgba(232,202,104,.34),
@@ -774,7 +850,8 @@
           inset 0 -2px 5px rgba(120,78,0,.16);
 
         text-shadow:
-          0 1px 3px rgba(85,55,0,.42);
+          0 1px 3px
+          rgba(85,55,0,.42);
       }
 
       .rjn-btn:hover,
@@ -792,8 +869,6 @@
         transform:
           scale(.96);
       }
-
-      /* GLITTER BUTTON */
 
       .rjn-btn::before,
       .rjn-ok::before {
@@ -823,67 +898,64 @@
           linear infinite;
       }
 
-      /* ==============================
-         MOBILE
-      ============================== */
+      /* MATIKAN ANIMASI JIKA PERANGKAT MEMINTA */
+
+      @media (prefers-reduced-motion: reduce) {
+        #rjn-title {
+          animation: none;
+
+          background-position:
+            50% 0;
+        }
+
+        #rjn-popup-box {
+          animation:
+            rjnSlideIn .45s
+            ease forwards;
+        }
+      }
+
+      /* MOBILE */
 
       @media (max-width: 768px) {
-
         #${POPUP_ID} {
           gap: 8px;
 
-          padding:
-            10px;
+          padding: 10px;
         }
 
         #rjn-image-stage,
         #rjn-popup-img,
         #rjn-popup-img-next {
-          max-width:
-            94vw;
-
-          max-height:
-            55vh;
-        }
-
-        .rjn-gif-box {
-          width:
-            78px;
+          max-width: 94vw;
+          max-height: 55vh;
         }
 
         .rjn-btn-row {
           width:
             min(310px, 94vw);
 
-          gap:
-            7px;
+          gap: 7px;
         }
 
         .rjn-btn {
-          width:
-            146px;
+          width: 146px;
 
-          padding:
-            11px 0;
+          padding: 11px 0;
 
-          font-size:
-            11px;
+          font-size: 11px;
         }
 
         .rjn-ok {
-          width:
-            115px;
+          width: 115px;
 
-          padding:
-            10px 0;
+          padding: 10px 0;
         }
 
         #rjn-title {
-          font-size:
-            13px;
+          font-size: 13px;
 
-          letter-spacing:
-            1.2px;
+          letter-spacing: 1.2px;
         }
       }
     `;
@@ -891,12 +963,7 @@
     document.head.appendChild(style);
   }
 
-  /* ==============================
-     BUAT POPUP
-  ============================== */
-
   async function createPopup() {
-
     if (
       popupCreated ||
       !canShowPopup() ||
@@ -911,11 +978,7 @@
 
     await preloadImages();
 
-    /* cek ulang setelah preload */
-
-    if (
-      document.getElementById(POPUP_ID)
-    ) {
+    if (document.getElementById(POPUP_ID)) {
       popupCreated = false;
       return;
     }
@@ -933,7 +996,6 @@
       POPUP_ID;
 
     popup.innerHTML = `
-
       <div id="rjn-popup-box">
 
         <div
@@ -984,26 +1046,9 @@
 
       </div>
 
-
-     <style>
-#rjn-title{
-  display:inline-block;
-  font-weight:800;
-  background:linear-gradient(110deg,#176b45 25%,#d62828 43%,#fff 50%,#d62828 57%,#176b45 75%);
-  background-size:250%;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation:shine 3s linear infinite;
-}
-@keyframes shine{
-  to{background-position:-250%}
-}
-</style>
-
-<div id="rjn-title">RAJANAGA99 • DIRGAHAYU INDONESIA</div>
-
-
-
+      <div id="rjn-title">
+        RAJANAGA99 • DIRGAHAYU INDONESIA
+      </div>
 
       <div class="rjn-btn-row">
 
@@ -1039,7 +1084,6 @@
     document.body.appendChild(overlay);
     document.body.appendChild(popup);
 
-
     const sliderImage =
       document.getElementById(
         "rjn-popup-img"
@@ -1055,18 +1099,11 @@
         "rjn-dots"
       );
 
-
-    /* ==============================
-       DOT SLIDER
-    ============================== */
-
     function renderDots() {
-
       dotsContainer.innerHTML = "";
 
       IMG.forEach(
         function (_, imageIndex) {
-
           const dot =
             document.createElement(
               "button"
@@ -1092,29 +1129,17 @@
           dot.addEventListener(
             "click",
             function () {
-
-              changeSlide(
-                imageIndex
-              );
-
+              changeSlide(imageIndex);
               resetSliderTimer();
             }
           );
 
-          dotsContainer.appendChild(
-            dot
-          );
+          dotsContainer.appendChild(dot);
         }
       );
     }
 
-
-    /* ==============================
-       GANTI SLIDE
-    ============================== */
-
     function changeSlide(newIndex) {
-
       if (
         changingSlide ||
         newIndex < 0 ||
@@ -1172,7 +1197,6 @@
       let finished = false;
 
       function finishSlide() {
-
         if (finished) return;
 
         finished = true;
@@ -1207,10 +1231,8 @@
 
         requestAnimationFrame(
           function () {
-
             requestAnimationFrame(
               function () {
-
                 nextSliderImage.style.transition =
                   "none";
 
@@ -1232,7 +1254,6 @@
 
                 requestAnimationFrame(
                   function () {
-
                     sliderImage.style.transition =
                       "";
 
@@ -1263,16 +1284,10 @@
         renderDots();
       }
 
-
-      function handleTransitionEnd(
-        event
-      ) {
-
+      function handleTransitionEnd(event) {
         if (
-          event.target ===
-            nextSliderImage &&
-          event.propertyName ===
-            "transform"
+          event.target === nextSliderImage &&
+          event.propertyName === "transform"
         ) {
           finishSlide();
         }
@@ -1289,22 +1304,15 @@
       );
     }
 
-
     function nextSlide() {
-
       const nextIndex =
-        (
-          currentIndex + 1
-        ) % IMG.length;
+        (currentIndex + 1) %
+        IMG.length;
 
-      changeSlide(
-        nextIndex
-      );
+      changeSlide(nextIndex);
     }
 
-
     function previousSlide() {
-
       const previousIndex =
         (
           currentIndex -
@@ -1312,48 +1320,27 @@
           IMG.length
         ) % IMG.length;
 
-      changeSlide(
-        previousIndex
-      );
+      changeSlide(previousIndex);
     }
 
-
     function startSliderTimer() {
+      clearInterval(sliderTimer);
 
-      clearInterval(
-        sliderTimer
-      );
-
-      if (IMG.length <= 1) {
-        return;
-      }
+      if (IMG.length <= 1) return;
 
       sliderTimer =
         setInterval(
-          function () {
-
-            nextSlide();
-
-          },
+          nextSlide,
           SLIDER_INTERVAL
         );
     }
-
 
     function resetSliderTimer() {
       startSliderTimer();
     }
 
-
-    /* ==============================
-       TUTUP POPUP
-    ============================== */
-
     function closePopup() {
-
-      clearInterval(
-        sliderTimer
-      );
+      clearInterval(sliderTimer);
 
       popup.classList.add(
         "pull-up"
@@ -1364,60 +1351,44 @@
       );
 
       try {
-
         localStorage.setItem(
           DELAY_KEY,
           String(Date.now())
         );
-
       } catch (error) {
-        /* abaikan jika localStorage diblokir */
+        /* Abaikan jika localStorage diblokir */
       }
 
       setTimeout(
         function () {
-
           popup.remove();
           overlay.remove();
 
-          popupCreated =
-            false;
-
+          popupCreated = false;
         },
         740
       );
     }
-
-
-    /* ==============================
-       EVENT
-    ============================== */
 
     document
       .getElementById("rjn-prev")
       .addEventListener(
         "click",
         function () {
-
           previousSlide();
           resetSliderTimer();
-
         }
       );
-
 
     document
       .getElementById("rjn-next")
       .addEventListener(
         "click",
         function () {
-
           nextSlide();
           resetSliderTimer();
-
         }
       );
-
 
     document
       .getElementById("rjn-close")
@@ -1426,7 +1397,6 @@
         closePopup
       );
 
-
     document
       .getElementById("rjn-ok")
       .addEventListener(
@@ -1434,18 +1404,10 @@
         closePopup
       );
 
-
-    /* klik background = tutup */
-
     overlay.addEventListener(
       "click",
       closePopup
     );
-
-
-    /* ==============================
-       START
-    ============================== */
 
     renderDots();
 
@@ -1454,81 +1416,51 @@
     }
   }
 
-
-  /* ==============================
-     INITIALIZE
-  ============================== */
-
   function initPopup() {
-
-    if (!document.body) {
-      return;
-    }
+    if (!document.body) return;
 
     createPopup();
   }
 
-
   if (
-    document.readyState ===
-    "loading"
+    document.readyState === "loading"
   ) {
-
     document.addEventListener(
       "DOMContentLoaded",
       initPopup,
-      {
-        once: true
-      }
+      { once: true }
     );
-
   } else {
-
     initPopup();
-
   }
-
-
-  /* ==============================
-     SUPPORT WEBSITE SPA
-  ============================== */
 
   let lastPath =
     location.pathname;
 
-
   const observer =
     new MutationObserver(
       function () {
-
         if (
-          location.pathname !==
-          lastPath
+          location.pathname !== lastPath
         ) {
-
           lastPath =
             location.pathname;
 
           window.setTimeout(
             function () {
-
               if (
                 !document.getElementById(
                   POPUP_ID
                 )
               ) {
-
                 createPopup();
-
               }
-
             },
             300
           );
         }
       }
     );
-
 
   observer.observe(
     document.documentElement,
@@ -1537,5 +1469,4 @@
       subtree: true
     }
   );
-
 })();
