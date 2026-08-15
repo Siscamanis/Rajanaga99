@@ -1,580 +1,1435 @@
 "use strict";
 
-(() => {
+(function () {
   const CONFIG = {
-    banners: [
+    images: [
       "http://plcl.me/images/Rc3Ca.png",
       "http://plcl.me/images/vv3HA.png",
       "http://plcl.me/images/KPFFs.png"
     ],
-    slideDelay: 7000,
+
     gifs: [
       {
-        src: "https://www.image2url.com/r2/default/gifs/1786706101549-46c2cbd4-7bc2-4a7b-9cd9-f95d2a4878ff.gif"
+        src: "https://www.image2url.com/r2/default/gifs/1786706101549-46c2cbd4-7bc2-4a7b-9cd9-f95d2a4878ff.gif",
+        alt: "RAJANAGA99 GIF 1"
       },
       {
         src: "https://www.image2url.com/r2/default/gifs/1786706728973-7c8bd8ad-a9d5-47e0-80ce-094f326e9612.gif",
-        href: "https://linkshortener.vip/rajanaga99-rtp",
-        label: "Buka RTP RAJANAGA99"
+        alt: "RAJANAGA99 GIF 2"
       },
       {
-        src: "https://www.image2url.com/r2/default/gifs/1786706890521-a2f1bb69-ac3d-4469-95a6-1a57d56edf15.gif"
+        src: "https://www.image2url.com/r2/default/gifs/1786706890521-a2f1bb69-ac3d-4469-95a6-1a57d56edf15.gif",
+        alt: "RAJANAGA99 GIF 3"
       }
     ],
-    liveChat: "https://tawk.to/chat/69f47e817f14b41c33bd2abc/1jnhgsb1s",
-    rtp: "https://linkshortener.vip/rajanaga99-rtp",
-    storageKey: "rjn_popup_delay_1h",
-    delay: 60 * 60 * 1000
+
+    title: "RAJANAGA99 • DIRGAHAYU INDONESIA",
+
+    buttons: [
+      {
+        label: "📊 RTP RAJANAGA99",
+        href: "https://linkshortener.vip/rajanaga99-rtp"
+      },
+      {
+        label: "💬 LIVE CHAT",
+        href: "https://tawk.to/chat/69f47e817f14b41c33bd2abc/1jnhgsb1s"
+      }
+    ],
+
+    sliderInterval: 7000,
+    showAgainAfter: 60 * 60 * 1000
   };
 
-  const IDS = {
-    style: "rjn-popup-style",
-    overlay: "rjn-popup-overlay",
-    popup: "rjn-popup"
-  };
+  const DELAY_KEY = "rjn_popup_delay_1h";
+  const STYLE_ID = "rjn-popup-style";
+  const POPUP_ID = "rjn-popup";
+  const OVERLAY_ID = "rjn-popup-overlay";
 
-  const isAllowedPage = () => {
-    const path = `${location.pathname}${location.hash}`
+  let currentIndex = 0;
+  let sliderTimer = null;
+  let changingSlide = false;
+  let closing = false;
+
+  function isAllowedPage() {
+    const path = location.pathname
       .replace(/\/+$/, "")
       .toLowerCase();
 
     return (
-      !path ||
+      path === "" ||
       path === "/" ||
-      ["home", "main", "index", "dashboard"].some((name) =>
-        path.includes(name)
-      )
+      path.includes("home")
     );
-  };
+  }
 
-  const isWaiting = () => {
-    try {
-      const lastClosed = Number(
-        localStorage.getItem(CONFIG.storageKey) || 0
-      );
+  function canShowPopup() {
+    if (!isAllowedPage()) return false;
+    if (document.getElementById(POPUP_ID)) return false;
 
-      return Boolean(
-        lastClosed && Date.now() - lastClosed < CONFIG.delay
-      );
-    } catch (_) {
-      return false;
-    }
-  };
+    const lastClosed = Number(
+      localStorage.getItem(DELAY_KEY) || 0
+    );
 
-  const addStyle = () => {
-    if (document.getElementById(IDS.style)) return;
+    return (
+      !lastClosed ||
+      Date.now() - lastClosed >= CONFIG.showAgainAfter
+    );
+  }
+
+  function preloadImages() {
+    const urls = CONFIG.images.concat(
+      CONFIG.gifs.map(function (gif) {
+        return gif.src;
+      })
+    );
+
+    return Promise.all(
+      urls.map(function (url) {
+        return new Promise(function (resolve) {
+          const image = new Image();
+
+          image.onload = resolve;
+          image.onerror = resolve;
+          image.src = url;
+
+          if (image.complete) resolve();
+        });
+      })
+    );
+  }
+
+  function injectStyle() {
+    if (document.getElementById(STYLE_ID)) return;
 
     const style = document.createElement("style");
-    style.id = IDS.style;
+    style.id = STYLE_ID;
+
     style.textContent = `
       @keyframes rjnFadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
       }
 
-      @keyframes rjnPopupIn {
-        from { opacity: 0; transform: translateY(20px) scale(.97); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+      @keyframes rjnFadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
       }
 
-      @keyframes rjnFloat {
-        0%, 100% { transform: translate3d(0, 0, 0); }
-        50% { transform: translate3d(0, -6px, 0); }
+      @keyframes rjnSlideIn {
+        from {
+          transform: translateY(25px);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes rjnPopupShatter {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+          filter: blur(0);
+        }
+
+        35% {
+          transform: scale(1.025);
+          opacity: .92;
+          filter: blur(0);
+        }
+
+        100% {
+          transform: scale(.82);
+          opacity: 0;
+          filter: blur(7px);
+        }
+      }
+
+      @keyframes rjnScaleShardBurst {
+        0% {
+          transform:
+            translate3d(0, 0, 0)
+            rotate(0deg)
+            scale(1);
+
+          opacity: 0;
+        }
+
+        12% {
+          opacity: 1;
+        }
+
+        100% {
+          transform:
+            translate3d(
+              var(--rjn-shard-x),
+              var(--rjn-shard-y),
+              0
+            )
+            rotate(var(--rjn-shard-rotate))
+            scale(.18);
+
+          opacity: 0;
+        }
       }
 
       @keyframes rjnShine {
-        from { background-position: 100% 0; }
-        to { background-position: -150% 0; }
-      }
-
-      @keyframes rjnSmokeFade {
         0% {
-          opacity: 1;
-          transform: scale(1);
-          filter: blur(0) brightness(1);
+          left: -40%;
         }
-        45% {
-          opacity: .72;
-          transform: scale(1.008);
-          filter: blur(2px) brightness(1.05);
-        }
+
         100% {
-          opacity: 0;
-          transform: scale(1.025);
-          filter: blur(12px) brightness(1.12);
+          left: 125%;
         }
       }
 
-      @keyframes rjnSmokeCloud {
-        0% {
-          opacity: 0;
-          transform: translate(-50%, -50%) scale(.55);
-        }
-        35% {
-          opacity: .58;
-        }
-        100% {
-          opacity: 0;
-          transform: translate(-50%, -54%) scale(1.55);
-        }
-      }
-
-      #${IDS.overlay} {
+      #${OVERLAY_ID} {
         position: fixed;
         inset: 0;
         z-index: 2147483646;
-        background: rgba(0, 0, 0, .72);
+
+        background:
+          linear-gradient(
+            180deg,
+            rgba(0, 0, 0, .35),
+            rgba(0, 0, 0, .84)
+          );
+
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
-        animation: rjnFadeIn .25s ease both;
+
+        animation:
+          rjnFadeIn .35s ease forwards;
       }
 
-      #${IDS.popup} {
+      #${OVERLAY_ID}.fade-out {
+        animation:
+          rjnFadeOut .35s ease forwards;
+      }
+
+      #${POPUP_ID} {
         position: fixed;
         inset: 0;
         z-index: 2147483647;
+
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        flex-direction: column;
+
+        gap: 10px;
         padding: 12px;
-        overflow-y: auto;
+
         box-sizing: border-box;
-        font-family: Arial, sans-serif;
-        animation: rjnPopupIn .35s ease both;
+        overflow-y: auto;
+        background: transparent;
       }
 
-      #${IDS.popup}::after {
-        content: "";
-        position: fixed;
-        left: 50%;
-        top: 50%;
-        z-index: 9999;
-        width: min(420px, 78vw);
-        height: min(290px, 45vh);
-        border-radius: 50%;
+      #${POPUP_ID}.shatter-out {
         pointer-events: none;
+
+        animation:
+          rjnPopupShatter .58s
+          cubic-bezier(.55, .05, .25, 1)
+          forwards;
+      }
+
+      .rjn-shard-layer {
+        position: fixed;
+        z-index: 2147483647;
+        overflow: visible;
+        pointer-events: none;
+      }
+
+      .rjn-scale-shard {
+        position: absolute;
+
+        left: var(--rjn-shard-left);
+        top: var(--rjn-shard-top);
+
+        width: var(--rjn-shard-size);
+        height:
+          calc(var(--rjn-shard-size) * 1.24);
+
         opacity: 0;
+
+        clip-path:
+          polygon(
+            50% 0,
+            94% 24%,
+            82% 78%,
+            50% 100%,
+            18% 78%,
+            6% 24%
+          );
+
         background:
-          radial-gradient(circle at 28% 58%, rgba(255,255,255,.34), transparent 34%),
-          radial-gradient(circle at 67% 38%, rgba(95,255,165,.26), transparent 38%),
-          radial-gradient(circle at 52% 68%, rgba(220,255,235,.22), transparent 45%);
-        filter: blur(16px);
-        transform: translate(-50%, -50%) scale(.55);
+          radial-gradient(
+            circle at 35% 22%,
+            rgba(255, 255, 255, .95),
+            transparent 18%
+          ),
+          linear-gradient(
+            145deg,
+            #fff1ac 0%,
+            #d6b85a 25%,
+            #2d8a5d 48%,
+            #176b45 74%,
+            #031407 100%
+          );
+
+        box-shadow:
+          0 0 7px
+          rgba(244, 215, 125, .85),
+
+          0 0 14px
+          rgba(45, 138, 93, .68);
+
+        animation:
+          rjnScaleShardBurst
+          var(--rjn-shard-duration)
+          cubic-bezier(.18, .7, .25, 1)
+          var(--rjn-shard-delay)
+          forwards;
+
+        will-change:
+          transform,
+          opacity;
       }
 
-      #${IDS.popup}.rjn-closing > * {
-        animation: rjnSmokeFade .74s cubic-bezier(.4,0,.2,1) forwards !important;
-      }
-
-      #${IDS.popup}.rjn-closing::after {
-        animation: rjnSmokeCloud .78s ease-out forwards;
-      }
-
-      #${IDS.overlay}.rjn-closing {
-        opacity: 0;
-        transition: opacity .78s ease;
-      }
-
-      .rjn-banner-box {
+      #rjn-popup-box {
         position: relative;
+
+        animation:
+          rjnSlideIn .45s ease forwards;
+
+        background: transparent;
+        border: none;
+        box-shadow: none;
+      }
+
+      #rjn-close {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        z-index: 9999;
+
+        width: 32px;
+        height: 32px;
+        padding: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border:
+          1px solid #f4d77d;
+
+        border-radius: 50%;
+
+        background:
+          linear-gradient(
+            180deg,
+            #8b5cf6,
+            #4c1d95 62%,
+            #111
+          );
+
+        color: #fff;
+        font-size: 16px;
+        font-weight: 900;
+        cursor: pointer;
+
+        box-shadow:
+          0 0 16px
+          rgba(244, 215, 125, .58);
+      }
+
+      #rjn-image-stage {
+        position: relative;
+
         display: grid;
         place-items: center;
-        animation: rjnFloat 5.5s cubic-bezier(.45,0,.55,1) infinite;
-        will-change: transform;
-      }
 
-      .rjn-banner {
-        display: block;
-        width: auto;
-        height: auto;
         max-width: 92vw;
         max-height: 58vh;
-        object-fit: contain;
+
+        overflow: hidden;
         background: transparent;
-        filter: drop-shadow(0 12px 20px rgba(0,0,0,.28));
-        opacity: 1;
-        transform: scale(1);
-        transition: opacity .3s ease, transform .3s ease;
       }
 
-      .rjn-banner.rjn-changing {
-        opacity: .12;
-        transform: scale(.992);
+      #rjn-popup-img,
+      #rjn-popup-img-next {
+        grid-area: 1 / 1;
+
+        display: block;
+
+        width: auto;
+        height: auto;
+
+        max-width: 92vw;
+        max-height: 58vh;
+
+        object-fit: contain;
+
+        border: none;
+        border-radius: 0;
+
+        background: transparent;
+        box-shadow: none;
+
+        will-change:
+          transform,
+          opacity;
+      }
+
+      #rjn-popup-img {
+        position: relative;
+        z-index: 1;
+
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      #rjn-popup-img-next {
+        position: relative;
+        z-index: 2;
+
+        opacity: 0;
+        transform: translateX(100%);
+        pointer-events: none;
+      }
+
+      #rjn-popup-img-next.slide-rtl {
+        opacity: 1;
+        transform: translateX(0);
+
+        transition:
+          transform .7s
+          cubic-bezier(.22, .8, .28, 1),
+
+          opacity .3s ease;
+      }
+
+      #rjn-popup-img.slide-old-left {
+        opacity: .28;
+        transform: translateX(-18%);
+
+        transition:
+          transform .7s
+          cubic-bezier(.22, .8, .28, 1),
+
+          opacity .55s ease;
       }
 
       .rjn-nav {
         position: absolute;
         top: 50%;
-        z-index: 2;
-        width: 31px;
-        height: 31px;
-        display: grid;
-        place-items: center;
+        z-index: 9998;
+
+        width: 30px;
+        height: 30px;
         padding: 0;
-        border: 1px solid #e5c85e;
+
+        transform: translateY(-50%);
+
+        border:
+          1px solid #f4d77d;
+
         border-radius: 50%;
+
+        background:
+          linear-gradient(
+            180deg,
+            #7c3aed,
+            #2e1065
+          );
+
         color: #fff;
-        background: linear-gradient(180deg, #159947, #075e29 55%, #032511);
-        box-shadow: 0 0 12px rgba(25,220,91,.35);
         font-size: 24px;
         font-weight: 900;
+        line-height: 22px;
         cursor: pointer;
-        transform: translateY(-50%);
+
+        box-shadow:
+          0 0 14px
+          rgba(244, 215, 125, .45);
       }
 
-      .rjn-prev { left: 8px; }
-      .rjn-next { right: 8px; }
+      #rjn-prev {
+        left: 8px;
+      }
 
-      .rjn-dots {
+      #rjn-next {
+        right: 8px;
+      }
+
+      #rjn-dots {
         position: absolute;
         left: 50%;
         bottom: 10px;
-        z-index: 2;
+        z-index: 9998;
+
         display: flex;
+        align-items: center;
+        justify-content: center;
+
         gap: 7px;
         padding: 5px 8px;
-        border-radius: 20px;
-        background: rgba(0,0,0,.35);
+
         transform: translateX(-50%);
+
+        border-radius: 20px;
+        background: rgba(0, 0, 0, .25);
       }
 
       .rjn-dot {
         width: 8px;
+        min-width: 8px;
         height: 8px;
         padding: 0;
-        border: 0;
+
+        border: none;
         border-radius: 50%;
-        background: rgba(255,255,255,.55);
+
+        background:
+          rgba(255, 255, 255, .5);
+
         cursor: pointer;
+
+        transition:
+          transform .2s ease,
+          background .2s ease;
       }
 
-      .rjn-dot.rjn-active {
-        background: #e1c45a;
-        box-shadow: 0 0 9px rgba(225,196,90,.9);
-        transform: scale(1.35);
+      .rjn-dot.active {
+        background: #f4d77d;
+        transform: scale(1.3);
+
+        box-shadow:
+          0 0 10px #f4d77d;
       }
 
-      .rjn-close {
-        position: absolute;
-        top: -13px;
-        right: -13px;
-        z-index: 2;
-        width: 34px;
-        height: 34px;
-        display: grid;
-        place-items: center;
-        padding: 0;
-        border: 1px solid #f1d878;
-        border-radius: 50%;
-        color: #fff;
-        background: linear-gradient(145deg, #19a84f, #075f29 55%, #032511);
-        box-shadow: 0 0 14px rgba(28,255,109,.35);
-        font-size: 17px;
+      #rjn-title {
+        color: #f5df98;
+
+        font-size: 16px;
         font-weight: 900;
-        cursor: pointer;
+        letter-spacing: 1.4px;
+        text-align: center;
+
+        text-shadow:
+          0 0 10px
+          rgba(168, 85, 247, .9),
+
+          0 0 24px
+          rgba(244, 215, 125, .45);
       }
 
-      .rjn-gifs {
-        width: min(360px, 92vw);
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 7px;
+      .rjn-gif-row {
+        display: flex;
         align-items: center;
+        justify-content: center;
+
+        gap: 10px;
       }
 
-      .rjn-gif,
-      .rjn-gif-link {
-        display: block;
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        object-fit: contain;
-        border: 0;
-        border-radius: 0;
+      .rjn-gif-box {
+        position: relative;
+        width: 90px;
+
+        overflow: visible;
+
+        border: none;
+        outline: none;
+
         background: transparent;
         box-shadow: none;
       }
 
-      .rjn-gif-link {
-        text-decoration: none;
-        transition: transform .18s ease, filter .18s ease;
-      }
+      .rjn-gif-box img {
+        display: block;
+        width: 100%;
 
-      .rjn-gif-link:hover {
-        transform: translateY(-2px) scale(1.025);
-        filter: brightness(1.1);
-      }
-
-      .rjn-gif-link .rjn-gif {
         pointer-events: none;
+
+        border: none;
+        border-radius: 0;
+        outline: none;
+
+        background: transparent;
+        box-shadow: none;
+        filter: none;
       }
 
-      .rjn-title {
-        color: transparent;
-        background: linear-gradient(
-          110deg,
-          #176b45 0%, #176b45 30%,
-          #d62828 43%, #fff 50%, #d62828 57%,
-          #176b45 70%, #176b45 100%
-        );
-        background-size: 250% 100%;
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 15px;
-        font-weight: 900;
-        letter-spacing: 1.6px;
-        text-align: center;
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,.55));
-        animation: rjnShine 4.2s linear infinite;
-      }
-
-      .rjn-buttons {
-        width: min(310px, 92vw);
+      .rjn-btn-row {
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
         justify-content: center;
+
+        width: 310px;
         gap: 8px;
+        margin-top: 2px;
+      }
+
+      .rjn-btn,
+      .rjn-ok {
+        position: relative;
+        overflow: hidden;
+
+        box-sizing: border-box;
+
+        color: #fff !important;
+        text-align: center;
+        font-weight: 900;
+        cursor: pointer;
+
+        transition:
+          transform .18s ease,
+          filter .18s ease;
       }
 
       .rjn-btn {
         width: 148px;
         padding: 12px 0;
-        box-sizing: border-box;
-        border: 1px solid rgba(255,225,125,.95);
-        border-radius: 14px;
-        color: #fff !important;
-        background: linear-gradient(180deg, #52e98c, #12a956 62%, #08783b);
-        box-shadow: 0 5px 14px rgba(0,0,0,.28);
-        text-align: center;
+
+        border:
+          1px solid #d9bd64;
+
+        border-radius: 15px;
+
+        background:
+          linear-gradient(
+            180deg,
+            #8b5cf6 0%,
+            #6d28d9 30%,
+            #3b0764 70%,
+            #111 100%
+          );
+
+        font-size: 11px;
+        letter-spacing: .35px;
         text-decoration: none;
-        font-size: 12px;
-        font-weight: 900;
-        cursor: pointer;
+        white-space: nowrap;
+
+        box-shadow:
+          0 0 12px
+          rgba(139, 92, 246, .65),
+
+          0 0 25px
+          rgba(217, 189, 100, .26),
+
+          0 9px 22px
+          rgba(0, 0, 0, .55),
+
+          inset 0 1px 0
+          rgba(255, 255, 255, .2);
       }
 
-      .rjn-btn.rjn-gold,
-      .rjn-btn.rjn-ok {
-        background: linear-gradient(180deg, #ffe99a, #c99b2f 67%, #a97818);
-      }
-
-      .rjn-btn.rjn-ok {
+      .rjn-ok {
         width: 120px;
         padding: 11px 0;
+
+        border:
+          1px solid #f4d77d;
+
+        border-radius: 14px;
+
+        background:
+          linear-gradient(
+            180deg,
+            #a855f7 0%,
+            #6d28d9 38%,
+            #3b0764 75%,
+            #111 100%
+          );
+
+        font-size: 14px;
+
+        box-shadow:
+          0 0 12px
+          rgba(168, 85, 247, .75),
+
+          0 0 25px
+          rgba(244, 215, 125, .32),
+
+          0 8px 20px
+          rgba(0, 0, 0, .5),
+
+          inset 0 1px 0
+          rgba(255, 255, 255, .2);
       }
 
-      .rjn-btn:hover {
-        transform: translateY(-1px) scale(1.03);
-        filter: brightness(1.1);
+      .rjn-btn:hover,
+      .rjn-ok:hover {
+        transform: scale(1.045);
+        filter: brightness(1.18);
+      }
+
+      .rjn-btn:active,
+      .rjn-ok:active {
+        transform: scale(.96);
+      }
+
+      .rjn-btn::before,
+      .rjn-ok::before {
+        content: "";
+
+        position: absolute;
+        top: 0;
+        left: -40%;
+
+        width: 25%;
+        height: 100%;
+
+        background:
+          linear-gradient(
+            120deg,
+            transparent,
+            rgba(244, 215, 125, .95),
+            transparent
+          );
+
+        transform: skewX(-25deg);
+
+        animation:
+          rjnShine 2s infinite;
       }
 
       @media (max-width: 768px) {
-        #${IDS.popup} { padding: 10px; }
-        .rjn-banner { max-width: 94vw; max-height: 55vh; }
-        .rjn-gifs { width: min(330px, 92vw); gap: 6px; }
-        .rjn-title { font-size: 13px; letter-spacing: 1.1px; }
-        .rjn-btn { width: 146px; padding: 11px 0; font-size: 11px; }
+        #${POPUP_ID} {
+          gap: 8px;
+        }
+
+        #rjn-image-stage,
+        #rjn-popup-img,
+        #rjn-popup-img-next {
+          max-width: 94vw;
+          max-height: 55vh;
+        }
+
+        .rjn-gif-box {
+          width: 78px;
+        }
+
+        .rjn-btn-row {
+          width: 310px;
+          gap: 8px;
+        }
+
+        .rjn-btn {
+          width: 148px;
+          padding: 11px 0;
+          font-size: 11px;
+        }
+
+        .rjn-ok {
+          width: 115px;
+          padding: 10px 0;
+          font-size: 13px;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .rjn-banner-box,
-        .rjn-title { animation: none; }
+        #${OVERLAY_ID},
+        #${POPUP_ID},
+        #rjn-popup-box,
+        .rjn-btn::before,
+        .rjn-ok::before,
+        .rjn-scale-shard {
+          animation: none !important;
+        }
       }
     `;
 
     document.head.appendChild(style);
-  };
+  }
 
-  const buildGifs = () =>
-    CONFIG.gifs
-      .map((item, index) => {
-        const image = `
-          <img
-            class="rjn-gif"
-            src="${item.src}"
-            alt="RAJANAGA99 GIF ${index + 1}"
-            loading="eager"
-            decoding="async"
-            draggable="false"
-          >`;
-
-        return item.href
-          ? `<a
-               class="rjn-gif-link"
-               href="${item.href}"
-               target="_blank"
-               rel="noopener noreferrer"
-               aria-label="${item.label || "Buka link"}"
-             >${image}</a>`
-          : image;
+  function renderGifItems() {
+    return CONFIG.gifs
+      .map(function (gif) {
+        return `
+          <div class="rjn-gif-box">
+            <img
+              src="${gif.src}"
+              alt="${gif.alt}"
+            >
+          </div>
+        `;
       })
       .join("");
+  }
 
-  const showPopup = () => {
-    if (
-      !document.body ||
-      !isAllowedPage() ||
-      isWaiting() ||
-      document.getElementById(IDS.popup)
-    ) {
-      return;
-    }
+  function renderButtonItems() {
+    return CONFIG.buttons
+      .map(function (button) {
+        return `
+          <a
+            class="rjn-btn"
+            href="${button.href}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ${button.label}
+          </a>
+        `;
+      })
+      .join("");
+  }
 
-    addStyle();
+  async function createPopup() {
+    if (!canShowPopup()) return;
+    if (!document.body) return;
+    if (!CONFIG.images.length) return;
 
-    const overlay = document.createElement("div");
-    overlay.id = IDS.overlay;
+    injectStyle();
+    await preloadImages();
 
-    const popup = document.createElement("div");
-    popup.id = IDS.popup;
+    if (!canShowPopup()) return;
+
+    const overlay =
+      document.createElement("div");
+
+    overlay.id = OVERLAY_ID;
+
+    const popup =
+      document.createElement("div");
+
+    popup.id = POPUP_ID;
+
+    popup.setAttribute(
+      "role",
+      "dialog"
+    );
+
+    popup.setAttribute(
+      "aria-modal",
+      "true"
+    );
+
+    popup.setAttribute(
+      "aria-label",
+      "Promo RAJANAGA99"
+    );
+
     popup.innerHTML = `
-      <div class="rjn-banner-box">
-        <button class="rjn-close" type="button" aria-label="Tutup popup">✕</button>
-        <button class="rjn-nav rjn-prev" type="button" aria-label="Banner sebelumnya">‹</button>
-        <img class="rjn-banner" src="${CONFIG.banners[0]}" alt="RAJANAGA99 Banner 1">
-        <button class="rjn-nav rjn-next" type="button" aria-label="Banner berikutnya">›</button>
-        <div class="rjn-dots" aria-label="Pilihan banner"></div>
+      <div id="rjn-popup-box">
+
+        <button
+          type="button"
+          id="rjn-close"
+          title="Tutup"
+          aria-label="Tutup popup"
+        >
+          ✕
+        </button>
+
+        <button
+          type="button"
+          class="rjn-nav"
+          id="rjn-prev"
+          aria-label="Gambar sebelumnya"
+        >
+          ‹
+        </button>
+
+        <div id="rjn-image-stage">
+
+          <img
+            id="rjn-popup-img"
+            src="${CONFIG.images[0]}"
+            alt="Promo RAJANAGA99 Slide 1"
+          >
+
+          <img
+            id="rjn-popup-img-next"
+            src=""
+            alt=""
+            aria-hidden="true"
+          >
+
+        </div>
+
+        <button
+          type="button"
+          class="rjn-nav"
+          id="rjn-next"
+          aria-label="Gambar berikutnya"
+        >
+          ›
+        </button>
+
+        <div id="rjn-dots"></div>
+
       </div>
 
-      <div class="rjn-gifs" aria-label="Pilihan game RAJANAGA99">
-        ${buildGifs()}
+      <div id="rjn-title">
+        ${CONFIG.title}
       </div>
 
-      <div class="rjn-title">RAJANAGA99 • DIRGAHAYU INDONESIA</div>
+      <div class="rjn-gif-row">
+        ${renderGifItems()}
+      </div>
 
-      <div class="rjn-buttons">
-        <a class="rjn-btn" href="${CONFIG.liveChat}" target="_blank" rel="noopener noreferrer">
-          💬 LIVE CHAT
-        </a>
-        <a class="rjn-btn rjn-gold" href="${CONFIG.rtp}" target="_blank" rel="noopener noreferrer">
-          📊 RTP
-        </a>
-        <button class="rjn-btn rjn-ok" type="button">OK</button>
+      <div class="rjn-btn-row">
+
+        ${renderButtonItems()}
+
+        <button
+          type="button"
+          class="rjn-ok"
+          id="rjn-ok"
+        >
+          OK
+        </button>
+
       </div>
     `;
 
-    document.body.append(overlay, popup);
+    document.body.appendChild(overlay);
+    document.body.appendChild(popup);
 
-    CONFIG.banners.forEach((src) => {
-      const image = new Image();
-      image.src = src;
-    });
+    const popupBox =
+      document.getElementById("rjn-popup-box");
 
-    const bannerImage = popup.querySelector(".rjn-banner");
-    const dots = popup.querySelector(".rjn-dots");
-    let bannerIndex = 0;
-    let bannerTimer = null;
-    let bannerChanging = false;
+    const sliderImage =
+      document.getElementById("rjn-popup-img");
 
-    const renderDots = () => {
-      dots.innerHTML = CONFIG.banners
-        .map(
-          (_, index) =>
-            `<button
-               class="rjn-dot${index === bannerIndex ? " rjn-active" : ""}"
-               type="button"
-               data-index="${index}"
-               aria-label="Tampilkan banner ${index + 1}"
-             ></button>`
-        )
-        .join("");
-    };
-
-    const changeBanner = (nextIndex) => {
-      if (nextIndex === bannerIndex || bannerChanging) return;
-
-      bannerChanging = true;
-      bannerImage.classList.add("rjn-changing");
-
-      window.setTimeout(() => {
-        bannerIndex =
-          (nextIndex + CONFIG.banners.length) % CONFIG.banners.length;
-        bannerImage.src = CONFIG.banners[bannerIndex];
-        bannerImage.alt = `RAJANAGA99 Banner ${bannerIndex + 1}`;
-        renderDots();
-
-        requestAnimationFrame(() =>
-          requestAnimationFrame(() => {
-            bannerImage.classList.remove("rjn-changing");
-            bannerChanging = false;
-          })
-        );
-      }, 220);
-    };
-
-    const startSlider = () => {
-      clearInterval(bannerTimer);
-      bannerTimer = window.setInterval(
-        () => changeBanner(bannerIndex + 1),
-        CONFIG.slideDelay
+    const nextSliderImage =
+      document.getElementById(
+        "rjn-popup-img-next"
       );
-    };
 
-    const selectBanner = (index) => {
-      changeBanner(index);
+    const dotsContainer =
+      document.getElementById("rjn-dots");
+
+    const closeButton =
+      document.getElementById("rjn-close");
+
+    const okButton =
+      document.getElementById("rjn-ok");
+
+    const previousButton =
+      document.getElementById("rjn-prev");
+
+    const nextButton =
+      document.getElementById("rjn-next");
+
+    function renderDots() {
+      dotsContainer.innerHTML = "";
+
+      CONFIG.images.forEach(
+        function (_, imageIndex) {
+          const dot =
+            document.createElement("button");
+
+          dot.type = "button";
+
+          dot.className =
+            "rjn-dot" +
+            (
+              imageIndex === currentIndex
+                ? " active"
+                : ""
+            );
+
+          dot.setAttribute(
+            "aria-label",
+            "Tampilkan gambar " +
+            (imageIndex + 1)
+          );
+
+          dot.addEventListener(
+            "click",
+            function () {
+              changeSlide(imageIndex);
+              restartSlider();
+            }
+          );
+
+          dotsContainer.appendChild(dot);
+        }
+      );
+    }
+
+    function changeSlide(newIndex) {
+      if (
+        changingSlide ||
+        closing ||
+        newIndex < 0 ||
+        newIndex >= CONFIG.images.length ||
+        newIndex === currentIndex
+      ) {
+        return;
+      }
+
+      changingSlide = true;
+
+      nextSliderImage.classList.remove(
+        "slide-rtl"
+      );
+
+      sliderImage.classList.remove(
+        "slide-old-left"
+      );
+
+      nextSliderImage.src =
+        CONFIG.images[newIndex];
+
+      nextSliderImage.alt =
+        "Promo RAJANAGA99 Slide " +
+        (newIndex + 1);
+
+      nextSliderImage.style.transition =
+        "none";
+
+      nextSliderImage.style.opacity = "0";
+
+      nextSliderImage.style.transform =
+        "translateX(100%)";
+
+      void nextSliderImage.offsetWidth;
+
+      nextSliderImage.style.transition = "";
+      nextSliderImage.style.opacity = "";
+      nextSliderImage.style.transform = "";
+
+      sliderImage.classList.add(
+        "slide-old-left"
+      );
+
+      nextSliderImage.classList.add(
+        "slide-rtl"
+      );
+
+      let finished = false;
+
+      function finishSlide() {
+        if (finished) return;
+
+        finished = true;
+
+        nextSliderImage.removeEventListener(
+          "transitionend",
+          handleTransitionEnd
+        );
+
+        currentIndex = newIndex;
+
+        sliderImage.src =
+          CONFIG.images[currentIndex];
+
+        sliderImage.alt =
+          "Promo RAJANAGA99 Slide " +
+          (currentIndex + 1);
+
+        sliderImage.classList.remove(
+          "slide-old-left"
+        );
+
+        sliderImage.style.transition =
+          "none";
+
+        sliderImage.style.opacity = "1";
+
+        sliderImage.style.transform =
+          "translateX(0)";
+
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            nextSliderImage.style.transition =
+              "none";
+
+            nextSliderImage.classList.remove(
+              "slide-rtl"
+            );
+
+            nextSliderImage.style.opacity =
+              "0";
+
+            nextSliderImage.style.transform =
+              "translateX(100%)";
+
+            nextSliderImage.src = "";
+            nextSliderImage.alt = "";
+
+            requestAnimationFrame(function () {
+              sliderImage.style.transition = "";
+              sliderImage.style.opacity = "";
+              sliderImage.style.transform = "";
+
+              nextSliderImage.style.transition =
+                "";
+
+              nextSliderImage.style.opacity =
+                "";
+
+              nextSliderImage.style.transform =
+                "";
+
+              changingSlide = false;
+            });
+          });
+        });
+
+        renderDots();
+      }
+
+      function handleTransitionEnd(event) {
+        if (
+          event.target === nextSliderImage &&
+          event.propertyName === "transform"
+        ) {
+          finishSlide();
+        }
+      }
+
+      nextSliderImage.addEventListener(
+        "transitionend",
+        handleTransitionEnd
+      );
+
+      window.setTimeout(
+        finishSlide,
+        900
+      );
+    }
+
+    function nextSlide() {
+      const nextIndex =
+        (
+          currentIndex + 1
+        ) % CONFIG.images.length;
+
+      changeSlide(nextIndex);
+    }
+
+    function previousSlide() {
+      const previousIndex =
+        (
+          currentIndex -
+          1 +
+          CONFIG.images.length
+        ) % CONFIG.images.length;
+
+      changeSlide(previousIndex);
+    }
+
+    function startSlider() {
+      clearInterval(sliderTimer);
+
+      if (CONFIG.images.length < 2) return;
+
+      sliderTimer =
+        window.setInterval(
+          nextSlide,
+          CONFIG.sliderInterval
+        );
+    }
+
+    function restartSlider() {
       startSlider();
-    };
+    }
 
-    popup.querySelector(".rjn-prev").addEventListener("click", () =>
-      selectBanner(bannerIndex - 1)
+    function handleKeydown(event) {
+      if (event.key === "Escape") {
+        closePopup();
+      }
+
+      if (event.key === "ArrowLeft") {
+        previousSlide();
+        restartSlider();
+      }
+
+      if (event.key === "ArrowRight") {
+        nextSlide();
+        restartSlider();
+      }
+    }
+
+    function createDragonScaleShards() {
+      const elements =
+        Array.from(popup.children);
+
+      const rectangles =
+        elements
+          .map(function (element) {
+            return element
+              .getBoundingClientRect();
+          })
+          .filter(function (rect) {
+            return (
+              rect.width > 0 &&
+              rect.height > 0
+            );
+          });
+
+      if (!rectangles.length) {
+        return null;
+      }
+
+      const left = Math.min.apply(
+        null,
+        rectangles.map(function (rect) {
+          return rect.left;
+        })
+      );
+
+      const top = Math.min.apply(
+        null,
+        rectangles.map(function (rect) {
+          return rect.top;
+        })
+      );
+
+      const right = Math.max.apply(
+        null,
+        rectangles.map(function (rect) {
+          return rect.right;
+        })
+      );
+
+      const bottom = Math.max.apply(
+        null,
+        rectangles.map(function (rect) {
+          return rect.bottom;
+        })
+      );
+
+      const width = right - left;
+      const height = bottom - top;
+
+      const layer =
+        document.createElement("div");
+
+      layer.className =
+        "rjn-shard-layer";
+
+      layer.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      layer.style.left =
+        left + "px";
+
+      layer.style.top =
+        top + "px";
+
+      layer.style.width =
+        width + "px";
+
+      layer.style.height =
+        height + "px";
+
+      const shardCount =
+        window.innerWidth <= 768
+          ? 28
+          : 42;
+
+      for (
+        let index = 0;
+        index < shardCount;
+        index += 1
+      ) {
+        const shard =
+          document.createElement("span");
+
+        const shardLeft =
+          6 + Math.random() * 88;
+
+        const shardTop =
+          5 + Math.random() * 90;
+
+        const size =
+          8 + Math.random() * 15;
+
+        const directionX =
+          shardLeft < 50 ? -1 : 1;
+
+        const travelX =
+          directionX *
+          (45 + Math.random() * 150);
+
+        const travelY =
+          -90 + Math.random() * 230;
+
+        const rotation =
+          -260 + Math.random() * 520;
+
+        const duration =
+          .62 + Math.random() * .34;
+
+        const delay =
+          Math.random() * .12;
+
+        shard.className =
+          "rjn-scale-shard";
+
+        shard.style.setProperty(
+          "--rjn-shard-left",
+          shardLeft + "%"
+        );
+
+        shard.style.setProperty(
+          "--rjn-shard-top",
+          shardTop + "%"
+        );
+
+        shard.style.setProperty(
+          "--rjn-shard-size",
+          size + "px"
+        );
+
+        shard.style.setProperty(
+          "--rjn-shard-x",
+          travelX + "px"
+        );
+
+        shard.style.setProperty(
+          "--rjn-shard-y",
+          travelY + "px"
+        );
+
+        shard.style.setProperty(
+          "--rjn-shard-rotate",
+          rotation + "deg"
+        );
+
+        shard.style.setProperty(
+          "--rjn-shard-duration",
+          duration + "s"
+        );
+
+        shard.style.setProperty(
+          "--rjn-shard-delay",
+          delay + "s"
+        );
+
+        layer.appendChild(shard);
+      }
+
+      document.body.appendChild(layer);
+
+      return layer;
+    }
+
+    function closePopup() {
+      if (closing) return;
+
+      closing = true;
+
+      clearInterval(sliderTimer);
+
+      document.removeEventListener(
+        "keydown",
+        handleKeydown
+      );
+
+      const shardLayer =
+        createDragonScaleShards();
+
+      popup.classList.add(
+        "shatter-out"
+      );
+
+      overlay.classList.add(
+        "fade-out"
+      );
+
+      localStorage.setItem(
+        DELAY_KEY,
+        String(Date.now())
+      );
+
+      window.setTimeout(function () {
+        popup.remove();
+        overlay.remove();
+
+        if (shardLayer) {
+          shardLayer.remove();
+        }
+      }, 1100);
+    }
+
+    closeButton.addEventListener(
+      "click",
+      closePopup
     );
-    popup.querySelector(".rjn-next").addEventListener("click", () =>
-      selectBanner(bannerIndex + 1)
+
+    okButton.addEventListener(
+      "click",
+      closePopup
     );
-    dots.addEventListener("click", (event) => {
-      const dot = event.target.closest(".rjn-dot");
-      if (dot) selectBanner(Number(dot.dataset.index));
-    });
+
+    overlay.addEventListener(
+      "click",
+      closePopup
+    );
+
+    previousButton.addEventListener(
+      "click",
+      function () {
+        previousSlide();
+        restartSlider();
+      }
+    );
+
+    nextButton.addEventListener(
+      "click",
+      function () {
+        nextSlide();
+        restartSlider();
+      }
+    );
+
+    popupBox.addEventListener(
+      "mouseenter",
+      function () {
+        clearInterval(sliderTimer);
+      }
+    );
+
+    popupBox.addEventListener(
+      "mouseleave",
+      startSlider
+    );
+
+    document.addEventListener(
+      "keydown",
+      handleKeydown
+    );
 
     renderDots();
     startSlider();
 
-    let isClosing = false;
+    closeButton.focus({
+      preventScroll: true
+    });
+  }
 
-    const closePopup = () => {
-      if (isClosing) return;
-      isClosing = true;
-      clearInterval(bannerTimer);
+  function init() {
+    if (!canShowPopup()) return;
 
-      try {
-        localStorage.setItem(CONFIG.storageKey, String(Date.now()));
-      } catch (_) {
-        /* Popup tetap dapat ditutup jika localStorage diblokir. */
+    createPopup().catch(
+      function (error) {
+        console.error(
+          "[RAJANAGA99 Popup] Gagal:",
+          error
+        );
       }
-
-      popup.classList.add("rjn-closing");
-      overlay.classList.add("rjn-closing");
-
-      window.setTimeout(() => {
-        popup.remove();
-        overlay.remove();
-      }, 800);
-    };
-
-    popup.querySelector(".rjn-close").addEventListener("click", closePopup);
-    popup.querySelector(".rjn-ok").addEventListener("click", closePopup);
-    popup.addEventListener("click", (event) => {
-      if (event.target === popup) closePopup();
-    });
-  };
-
-  const init = () => {
-    showPopup();
-
-    let currentUrl = location.href;
-    new MutationObserver(() => {
-      if (location.href === currentUrl) return;
-      currentUrl = location.href;
-      window.setTimeout(showPopup, 300);
-    }).observe(document.documentElement, {
-      childList: true,
-      subtree: true
-    });
-  };
+    );
+  }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init, { once: true });
+    document.addEventListener(
+      "DOMContentLoaded",
+      init,
+      { once: true }
+    );
   } else {
     init();
   }
