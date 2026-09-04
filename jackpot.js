@@ -2,7 +2,7 @@
 
 (function () {
     const NEW_IMAGE_URL =
-        "https://lh3.googleusercontent.com/d/1IWOmRQ0xrSs7RXehGVTfid0j01C3fwdx";
+        "https://lh3.googleusercontent.com/d/1ug9DXQrLfn_E3ALRv8w3zYuUBlJm_jQP";
 
     const TARGET_SELECTOR = 'img[alt="jackpot-bg"]';
     const MAX_RETRY = 40;
