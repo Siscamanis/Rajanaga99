@@ -1,74 +1,107 @@
+"use strict";
+
 (function () {
-  "use strict";
+    const NEW_IMAGE_URL =
+        "https://lh3.googleusercontent.com/d/1IWOmRQ0xrSs7RXehGVTfid0j01C3fwdx";
 
-  const JACKPOT_IMAGE =
-    "http://plcl.me/images/WkMaq.png";
+    const TARGET_SELECTOR = 'img[alt="jackpot-bg"]';
+    const MAX_RETRY = 40;
+    const RETRY_INTERVAL = 250;
 
-  function replaceJackpotBackground() {
-    const jackpotImages = document.querySelectorAll(
-      'img[alt="jackpot-bg"]'
-    );
+    let updateScheduled = false;
 
-    if (!jackpotImages.length) return;
+    function replaceJackpotDesktop() {
+        const images = document.querySelectorAll(TARGET_SELECTOR);
 
-    jackpotImages.forEach(function (image) {
-      const parent = image.parentElement;
+        images.forEach(function (image) {
+            const parent = image.parentElement;
 
-      if (!parent || parent.dataset.jackpotReplaced === "1") {
-        return;
-      }
+            if (!parent) return;
 
-      // Mengganti gambar jackpot pada bagian parent
-      parent.style.backgroundImage = `url(${JACKPOT_IMAGE})`;
-      parent.style.backgroundSize = "contain";
-      parent.style.backgroundRepeat = "no-repeat";
-      parent.style.backgroundPosition = "center";
-      parent.style.backgroundColor = "transparent";
+            parent.style.setProperty(
+                "background-image",
+                `url("${NEW_IMAGE_URL}")`,
+                "important"
+            );
+            parent.style.setProperty(
+                "background-size",
+                "contain",
+                "important"
+            );
+            parent.style.setProperty(
+                "background-repeat",
+                "no-repeat",
+                "important"
+            );
+            parent.style.setProperty(
+                "background-position",
+                "center",
+                "important"
+            );
+            parent.style.setProperty(
+                "background-color",
+                "transparent",
+                "important"
+            );
 
-      // Menyembunyikan gambar jackpot bawaan
-      image.style.opacity = "0";
-      image.style.visibility = "hidden";
+            /*
+             * Gambar asli tetap mempertahankan ukuran parent,
+             * tetapi tidak akan terlihat.
+             */
+            image.style.setProperty("opacity", "0", "important");
+            image.style.setProperty("visibility", "hidden", "important");
 
-      // Menandai elemen agar tidak diproses berulang kali
-      parent.dataset.jackpotReplaced = "1";
+            parent.dataset.jackpotReplaced = "1";
+        });
+    }
 
-      console.log(
-        "[✅] Jackpot desktop diganti di parent:",
-        parent
-      );
-    });
-  }
+    function scheduleReplacement() {
+        if (updateScheduled) return;
 
-  function startJackpotReplacement() {
-    let attempts = 0;
-    const maxAttempts = 40;
+        updateScheduled = true;
 
-    const replacementInterval = setInterval(function () {
-      replaceJackpotBackground();
-      attempts++;
+        requestAnimationFrame(function () {
+            replaceJackpotDesktop();
+            updateScheduled = false;
+        });
+    }
 
-      if (attempts >= maxAttempts) {
-        clearInterval(replacementInterval);
-      }
-    }, 250);
-  }
+    function startRetry() {
+        let retryCount = 0;
 
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      startJackpotReplacement
-    );
-  } else {
-    startJackpotReplacement();
-  }
+        replaceJackpotDesktop();
 
-  // Memantau elemen jackpot yang dimuat secara dinamis
-  const jackpotObserver = new MutationObserver(function () {
-    replaceJackpotBackground();
-  });
+        const retryTimer = setInterval(function () {
+            replaceJackpotDesktop();
+            retryCount += 1;
 
-  jackpotObserver.observe(document.documentElement, {
-    childList: true,
-    subtree: true
-  });
+            if (
+                retryCount >= MAX_RETRY ||
+                document.querySelector(TARGET_SELECTOR)
+            ) {
+                clearInterval(retryTimer);
+            }
+        }, RETRY_INTERVAL);
+    }
+
+    function initialize() {
+        startRetry();
+
+        const observer = new MutationObserver(function () {
+            scheduleReplacement();
+        });
+
+        observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initialize, {
+            once: true
+        });
+    } else {
+        initialize();
+    }
 })();
