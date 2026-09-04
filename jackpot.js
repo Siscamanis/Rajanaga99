@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-    const NEW_IMAGE_URL =
+    const NEW_IMAGE_URL_RJN99 =
         "https://lh3.googleusercontent.com/d/1IWOmRQ0xrSs7RXehGVTfid0j01C3fwdx";
 
     const TARGET_SELECTOR = 'img[alt="jackpot-bg"]';
