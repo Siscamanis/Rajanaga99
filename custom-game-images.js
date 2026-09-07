@@ -1,1 +1,435 @@
-function _0x24a1(_0x33dec5,_0x14f313){_0x33dec5=_0x33dec5-0x1ac;const _0x5def8b=_0x5def();let _0x24a1c9=_0x5def8b[_0x33dec5];return _0x24a1c9;}function _0x5def(){const _0x1eaded=['60570KRZOLw','createElement','textContent','12xTyapn','style','3390464PhnsBf','1279fxPvjh','253645DKijMf','589276CtWveH','3xGKjEw','appendChild','168MMztrb','head','1030CruWCg','154GbPLmZ','\x0a\x20\x20\x20\x20\x20\x20\x20\x20/*\x20Start\x20Replace\x20Custom\x20Image\x20Game\x20+\x20Hot\x20Badge\x20*/\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x20img[data-nimg],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x20img[src*=\x22/_next/image\x22],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x22]\x20img,\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x202\x22]\x20img\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20opacity:\x200\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x202\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper]\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-size:\x20cover\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-position:\x20center\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-repeat:\x20no-repeat\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20relative\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper]\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-image:\x20url(\x22https://imgcdn.it.com/hb8fdn9z3sk9b845yd0f/external-source/ms/mahjong-3.webp\x22)\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper]\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-image:\x20url(\x22https://imgcdn.it.com/hb8fdn9z3sk9b845yd0f/external-source/ms/mahjong-1.webp\x22)\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x202\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper]\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background-image:\x20url(\x22https://imgcdn.it.com/hb8fdn9z3sk9b845yd0f/external-source/ms/mahjong-2.webp\x22)\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x20img[src*=\x22hot\x22],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x20img[src*=\x22HOT\x22],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x20img[src*=\x22tag\x22],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x22]\x20img[src*=\x22hot\x22],\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x202\x22]\x20img[src*=\x22hot\x22]\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20display:\x20none\x20!important;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Wins\x203\x20-\x20Black\x20Scatter\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper]::after,\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper]::after,\x0a\x20\x20\x20\x20\x20\x20\x20\x20[data-game-name=\x22Mahjong\x20Ways\x202\x22]\x0a\x20\x20\x20\x20\x20\x20\x20\x20div[data-radix-aspect-ratio-wrapper]::after\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20content:\x20\x22ðŸ”¥\x20HOT\x22;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20position:\x20absolute;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20top:\x206px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20left:\x206px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20linear-gradient(135deg,\x20#ff0000,\x20#ff9900);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20color:\x20#ffffff;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-size:\x207px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20font-weight:\x20bold;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20padding:\x202px\x205px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x204px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20z-index:\x2030;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:\x200\x202px\x206px\x20rgba(0,0,0,.45);\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20pointer-events:\x20none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20animation:\x20hotPulse\x201.3s\x20infinite;\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20\x20\x20@keyframes\x20hotPulse\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x200%\x20\x20\x20{\x20transform:\x20scale(1);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2050%\x20\x20{\x20transform:\x20scale(1.08);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20100%\x20{\x20transform:\x20scale(1);\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20/*\x20End\x20Replace\x20Custom\x20Image\x20Game\x20+\x20Hot\x20Badge\x20*/\x0a\x20\x20\x20\x20','413028WfDylE','6538776fLrBSp'];_0x5def=function(){return _0x1eaded;};return _0x5def();}(function(_0x30aa09,_0xaff00e){const _0x21d1cf=_0x24a1,_0x14f2c5=_0x30aa09();while(!![]){try{const _0x1a0c66=-parseInt(_0x21d1cf(0x1af))/0x1*(parseInt(_0x21d1cf(0x1b7))/0x2)+-parseInt(_0x21d1cf(0x1b2))/0x3*(-parseInt(_0x21d1cf(0x1b1))/0x4)+-parseInt(_0x21d1cf(0x1b0))/0x5*(parseInt(_0x21d1cf(0x1ac))/0x6)+-parseInt(_0x21d1cf(0x1ae))/0x7+parseInt(_0x21d1cf(0x1ba))/0x8+parseInt(_0x21d1cf(0x1bb))/0x9*(parseInt(_0x21d1cf(0x1b6))/0xa)+-parseInt(_0x21d1cf(0x1b9))/0xb*(parseInt(_0x21d1cf(0x1b4))/0xc);if(_0x1a0c66===_0xaff00e)break;else _0x14f2c5['push'](_0x14f2c5['shift']());}catch(_0x36ac34){_0x14f2c5['push'](_0x14f2c5['shift']());}}}(_0x5def,0x6d593),(function(){const _0x590138=_0x24a1,_0x373a93=document[_0x590138(0x1bc)](_0x590138(0x1ad));_0x373a93[_0x590138(0x1bd)]=_0x590138(0x1b8),document[_0x590138(0x1b5)][_0x590138(0x1b3)](_0x373a93);}()));
+(function () {
+    "use strict";
+
+    /* =====================================================
+       RAJANAGA99
+       CUSTOM GAME IMAGE + HOT BADGE
+       GitHub JS
+    ===================================================== */
+
+    const STYLE_ID = "rajanaga99-custom-game-style";
+
+    const GAMES = {
+        "Mahjong Wins 3 - Black Scatter":
+            "https://imgcdn.it.com/hb8fdn9z3sk9b845yd0f/external-source/ms/mahjong-3.webp",
+
+        "Mahjong Ways":
+            "https://imgcdn.it.com/hb8fdn9z3sk9b845yd0f/external-source/ms/mahjong-1.webp",
+
+        "Mahjong Ways 2":
+            "https://imgcdn.it.com/hb8fdn9z3sk9b845yd0f/external-source/ms/mahjong-2.webp"
+    };
+
+
+    /* =====================================================
+       INJECT CSS
+    ===================================================== */
+
+    function injectStyle() {
+
+        if (document.getElementById(STYLE_ID)) {
+            return;
+        }
+
+        const style = document.createElement("style");
+
+        style.id = STYLE_ID;
+
+        style.textContent = `
+
+        /* ================================================
+           CUSTOM GAME IMAGE
+        ================================================ */
+
+        ${Object.keys(GAMES).map(function (name) {
+            return `
+            [data-game-name="${name}"]
+            div[data-radix-aspect-ratio-wrapper] {
+
+                position: relative !important;
+
+                overflow: hidden !important;
+
+                background-image:
+                    url("${GAMES[name]}") !important;
+
+                background-size: cover !important;
+
+                background-position: center !important;
+
+                background-repeat: no-repeat !important;
+
+                isolation: isolate;
+
+                border-radius: inherit;
+
+                box-shadow:
+                    0 0 0 1px rgba(156,255,0,.35),
+                    0 0 6px rgba(156,255,0,.30),
+                    0 0 14px rgba(156,255,0,.18);
+
+                transition:
+                    box-shadow .25s ease,
+                    transform .25s ease;
+            }
+            `;
+        }).join("")}
+
+
+        /* ================================================
+           HIDE ORIGINAL GAME IMAGE
+        ================================================ */
+
+        ${Object.keys(GAMES).map(function (name) {
+            return `
+            [data-game-name="${name}"]
+            img[data-nimg],
+
+            [data-game-name="${name}"]
+            img[src*="/_next/image"] {
+
+                opacity: 0 !important;
+
+                visibility: hidden !important;
+            }
+            `;
+        }).join("")}
+
+
+        /* ================================================
+           HIDE ORIGINAL HOT TAG
+        ================================================ */
+
+        ${Object.keys(GAMES).map(function (name) {
+            return `
+            [data-game-name="${name}"]
+            img[src*="hot"],
+
+            [data-game-name="${name}"]
+            img[src*="HOT"],
+
+            [data-game-name="${name}"]
+            img[src*="tag"] {
+
+                display: none !important;
+            }
+            `;
+        }).join("")}
+
+
+        /* ================================================
+           RAJANAGA99 HOT BADGE
+        ================================================ */
+
+        ${Object.keys(GAMES).map(function (name) {
+            return `
+            [data-game-name="${name}"]
+            div[data-radix-aspect-ratio-wrapper]::before {
+
+                content: "\\1F525 HOT";
+
+                position: absolute;
+
+                top: 6px;
+                left: 6px;
+
+                z-index: 50;
+
+                display: flex;
+
+                align-items: center;
+                justify-content: center;
+
+                height: 18px;
+
+                padding: 0 7px;
+
+                border-radius: 6px;
+
+                background:
+                    linear-gradient(
+                        135deg,
+                        #ff1a00 0%,
+                        #ff4d00 45%,
+                        #ffb300 100%
+                    );
+
+                color: #ffffff;
+
+                font-family:
+                    Arial,
+                    Helvetica,
+                    sans-serif;
+
+                font-size: 8px;
+
+                font-weight: 900;
+
+                line-height: 1;
+
+                letter-spacing: .2px;
+
+                white-space: nowrap;
+
+                box-shadow:
+                    0 0 4px rgba(255,40,0,.95),
+                    0 0 9px rgba(255,80,0,.75),
+                    0 2px 8px rgba(0,0,0,.65);
+
+                text-shadow:
+                    0 1px 2px rgba(0,0,0,.8);
+
+                transform-origin: center;
+
+                animation:
+                    rajanagaHotPulse
+                    1.15s
+                    ease-in-out
+                    infinite;
+            }
+            `;
+        }).join("")}
+
+
+        /* ================================================
+           IMAGE SHINE
+        ================================================ */
+
+        ${Object.keys(GAMES).map(function (name) {
+            return `
+            [data-game-name="${name}"]
+            div[data-radix-aspect-ratio-wrapper]::after {
+
+                content: "";
+
+                position: absolute;
+
+                top: 0;
+                left: -80%;
+
+                width: 45%;
+                height: 100%;
+
+                z-index: 40;
+
+                pointer-events: none;
+
+                background:
+                    linear-gradient(
+                        105deg,
+                        transparent 0%,
+                        rgba(255,255,255,.04) 35%,
+                        rgba(255,255,255,.45) 50%,
+                        rgba(255,255,255,.04) 65%,
+                        transparent 100%
+                    );
+
+                transform: skewX(-18deg);
+
+                animation:
+                    rajanagaGameShine
+                    3.5s
+                    ease-in-out
+                    infinite;
+            }
+            `;
+        }).join("")}
+
+
+        /* ================================================
+           HOVER GLOW
+        ================================================ */
+
+        ${Object.keys(GAMES).map(function (name) {
+            return `
+            [data-game-name="${name}"]:hover
+            div[data-radix-aspect-ratio-wrapper] {
+
+                box-shadow:
+                    0 0 0 1px rgba(156,255,0,.90),
+                    0 0 8px rgba(156,255,0,.75),
+                    0 0 18px rgba(156,255,0,.55),
+                    0 0 30px rgba(156,255,0,.25);
+            }
+            `;
+        }).join("")}
+
+
+        /* ================================================
+           HOT PULSE
+        ================================================ */
+
+        @keyframes rajanagaHotPulse {
+
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.08);
+                filter: brightness(1.35);
+            }
+
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+        }
+
+
+        /* ================================================
+           GAME SHINE
+        ================================================ */
+
+        @keyframes rajanagaGameShine {
+
+            0% {
+                left: -80%;
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            45% {
+                left: 130%;
+                opacity: 1;
+            }
+
+            55% {
+                left: 130%;
+                opacity: 0;
+            }
+
+            100% {
+                left: 130%;
+                opacity: 0;
+            }
+        }
+
+        `;
+
+        document.head.appendChild(style);
+    }
+
+
+    /* =====================================================
+       PROCESS GAME
+    ===================================================== */
+
+    function processGames() {
+
+        Object.keys(GAMES).forEach(function (gameName) {
+
+            const elements =
+                document.querySelectorAll(
+                    `[data-game-name="${gameName}"]`
+                );
+
+            elements.forEach(function (element) {
+
+                const wrapper =
+                    element.querySelector(
+                        "div[data-radix-aspect-ratio-wrapper]"
+                    );
+
+                if (!wrapper) {
+                    return;
+                }
+
+                wrapper.style.position = "relative";
+
+            });
+
+        });
+    }
+
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    function init() {
+
+        injectStyle();
+
+        processGames();
+
+    }
+
+
+    /* =====================================================
+       START
+    ===================================================== */
+
+    if (document.readyState === "loading") {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            init
+        );
+
+    } else {
+
+        init();
+
+    }
+
+
+    /* =====================================================
+       SUPPORT REACT / NEXT.JS / AJAX
+    ===================================================== */
+
+    let timer = null;
+
+    const observer =
+        new MutationObserver(function () {
+
+            if (timer) {
+                return;
+            }
+
+            timer = setTimeout(function () {
+
+                timer = null;
+
+                processGames();
+
+            }, 100);
+
+        });
+
+
+    function startObserver() {
+
+        if (!document.body) {
+            return;
+        }
+
+        observer.observe(
+            document.body,
+            {
+                childList: true,
+                subtree: true
+            }
+        );
+
+    }
+
+
+    if (document.body) {
+
+        startObserver();
+
+    } else {
+
+        window.addEventListener(
+            "DOMContentLoaded",
+            startObserver
+        );
+
+    }
+
+})();
