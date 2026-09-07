@@ -1,1 +1,169 @@
-function _0x41a1(_0x156930,_0x46f485){_0x156930=_0x156930-0xe1;const _0x26d01b=_0x26d0();let _0x41a1bd=_0x26d01b[_0x156930];return _0x41a1bd;}function _0x26d0(){const _0x166144=['7390070WSXLxG','dataset','addEventListener','44286852sxuggd','observe','textContent','className','load','left','includes','203075FlYlmi','1153514HckjCK','--d','div,section','setProperty','Slot','9DqLvnL','querySelectorAll','spark','128QsUmSe','192keSDJX','5840920mmglcw','nav-spark','11nTjKOf','appendChild','createElement','position','remove','29412zYGIPl','overflow','random','style','visible','innerText','26241ZFsDea','relative','7NlAZJi','nav-sparks','find','div','head'];_0x26d0=function(){return _0x166144;};return _0x26d0();}(function(_0x12bc32,_0x3f609c){const _0x45794e=_0x41a1,_0x45ef73=_0x12bc32();while(!![]){try{const _0xfa818e=parseInt(_0x45794e(0xfc))/0x1+parseInt(_0x45794e(0x104))/0x2*(parseInt(_0x45794e(0xea))/0x3)+-parseInt(_0x45794e(0xe4))/0x4+parseInt(_0x45794e(0xfb))/0x5*(parseInt(_0x45794e(0x105))/0x6)+-parseInt(_0x45794e(0xec))/0x7*(-parseInt(_0x45794e(0x106))/0x8)+-parseInt(_0x45794e(0x101))/0x9*(-parseInt(_0x45794e(0xf1))/0xa)+parseInt(_0x45794e(0x108))/0xb*(-parseInt(_0x45794e(0xf4))/0xc);if(_0xfa818e===_0x3f609c)break;else _0x45ef73['push'](_0x45ef73['shift']());}catch(_0x211cb0){_0x45ef73['push'](_0x45ef73['shift']());}}}(_0x26d0,0xbf748),(function(){const _0x329564=_0x41a1;function _0x435af6(){const _0x36c822=_0x41a1;return[...document[_0x36c822(0x102)](_0x36c822(0xfe))][_0x36c822(0xee)](_0x17da6d=>_0x17da6d[_0x36c822(0xe9)][_0x36c822(0xfa)]('Beranda')&&_0x17da6d[_0x36c822(0xe9)][_0x36c822(0xfa)](_0x36c822(0x100))&&_0x17da6d['offsetHeight']<0x78);}function _0x56abac(_0x451575){const _0x4948d7=_0x41a1;if(!_0x451575||_0x451575[_0x4948d7(0xf2)][_0x4948d7(0x103)]==='1')return;_0x451575[_0x4948d7(0xf2)][_0x4948d7(0x103)]='1',_0x451575[_0x4948d7(0xe7)][_0x4948d7(0xe2)]=_0x4948d7(0xeb),_0x451575[_0x4948d7(0xe7)][_0x4948d7(0xe5)]=_0x4948d7(0xe8);const _0x40f131=document[_0x4948d7(0xe1)](_0x4948d7(0xe7));_0x40f131[_0x4948d7(0xf6)]='\x0a\x20\x20\x20\x20\x20\x20.nav-sparks\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20position:absolute;\x0a\x20\x20\x20\x20\x20\x20\x20\x20left:0;\x0a\x20\x20\x20\x20\x20\x20\x20\x20right:0;\x0a\x20\x20\x20\x20\x20\x20\x20\x20bottom:0;\x0a\x20\x20\x20\x20\x20\x20\x20\x20height:70px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20pointer-events:none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20z-index:1;\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20.nav-spark\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x20position:absolute;\x0a\x20\x20\x20\x20\x20\x20\x20\x20bottom:0;\x0a\x20\x20\x20\x20\x20\x20\x20\x20width:2px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20height:2px;\x0a\x20\x20\x20\x20\x20\x20\x20\x20border-radius:50%;\x0a\x20\x20\x20\x20\x20\x20\x20\x20background:#9cff00;\x0a\x20\x20\x20\x20\x20\x20\x20\x20box-shadow:0\x200\x204px\x20rgba(156,255,0,.8);\x0a\x20\x20\x20\x20\x20\x20\x20\x20pointer-events:none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20animation:\x20sparkUp\x20var(--d)\x20linear\x20forwards;\x0a\x20\x20\x20\x20\x20\x20}\x0a\x0a\x20\x20\x20\x20\x20\x20@keyframes\x20sparkUp\x20{\x0a\x20\x20\x20\x20\x20\x20\x20\x200%\x20\x20\x20{\x20transform:translateY(0);\x20opacity:0;\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x2010%\x20\x20{\x20opacity:1;\x20}\x0a\x20\x20\x20\x20\x20\x20\x20\x20100%\x20{\x20transform:translateY(-70px);\x20opacity:0;\x20}\x0a\x20\x20\x20\x20\x20\x20}\x0a\x20\x20\x20\x20',document[_0x4948d7(0xf0)][_0x4948d7(0x109)](_0x40f131);const _0x5949f0=document['createElement']('div');_0x5949f0[_0x4948d7(0xf7)]=_0x4948d7(0xed),_0x451575[_0x4948d7(0x109)](_0x5949f0),setInterval(()=>{const _0x4db7d4=_0x4948d7,_0x3adb09=document['createElement'](_0x4db7d4(0xef));_0x3adb09[_0x4db7d4(0xf7)]=_0x4db7d4(0x107),_0x3adb09[_0x4db7d4(0xe7)][_0x4db7d4(0xf9)]=Math[_0x4db7d4(0xe6)]()*0x64+'%',_0x3adb09[_0x4db7d4(0xe7)][_0x4db7d4(0xff)](_0x4db7d4(0xfd),1.2+Math[_0x4db7d4(0xe6)]()*1.2+'s'),_0x5949f0['appendChild'](_0x3adb09),setTimeout(()=>_0x3adb09[_0x4db7d4(0xe3)](),0x7d0);},0xa0);}function _0x3ac921(){const _0x4a13ec=_0x435af6();if(_0x4a13ec)_0x56abac(_0x4a13ec);}window[_0x329564(0xf3)](_0x329564(0xf8),_0x3ac921),new MutationObserver(_0x3ac921)[_0x329564(0xf5)](document['body'],{'childList':!![],'subtree':!![]});}()));
+(function () {
+    "use strict";
+
+    function findTarget() {
+        const elements = document.querySelectorAll("div, section");
+
+        return [...elements].find(function (el) {
+            const text = el.innerText || "";
+
+            return (
+                text.includes("Beranda") &&
+                text.includes("Slot") &&
+                el.offsetHeight < 120
+            );
+        });
+    }
+
+    function addSparkEffect(target) {
+        if (!target) return;
+
+        // Jangan pasang dua kali
+        if (target.dataset.spark === "1") return;
+
+        target.dataset.spark = "1";
+
+        // Pastikan container bisa menjadi parent absolute
+        target.style.position = "relative";
+        target.style.overflow = "visible";
+
+        // ==============================
+        // CSS SPARK
+        // ==============================
+
+        if (!document.getElementById("gadunslot-nav-spark-style")) {
+            const style = document.createElement("style");
+
+            style.id = "gadunslot-nav-spark-style";
+
+            style.textContent = `
+                .nav-sparks {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 70px;
+                    pointer-events: none;
+                    z-index: 10;
+                    overflow: visible;
+                }
+
+                .nav-spark {
+                    position: absolute;
+                    bottom: 0;
+
+                    width: 2px;
+                    height: 2px;
+
+                    border-radius: 50%;
+
+                    background: #9cff00;
+
+                    box-shadow:
+                        0 0 4px rgba(156, 255, 0, 0.8),
+                        0 0 8px rgba(156, 255, 0, 0.5);
+
+                    pointer-events: none;
+
+                    animation:
+                        gadunSparkUp
+                        var(--d)
+                        linear
+                        forwards;
+                }
+
+                @keyframes gadunSparkUp {
+
+                    0% {
+                        transform: translateY(0);
+                        opacity: 0;
+                    }
+
+                    10% {
+                        opacity: 1;
+                    }
+
+                    100% {
+                        transform: translateY(-70px);
+                        opacity: 0;
+                    }
+
+                }
+            `;
+
+            document.head.appendChild(style);
+        }
+
+        // ==============================
+        // SPARK CONTAINER
+        // ==============================
+
+        const sparkContainer = document.createElement("div");
+
+        sparkContainer.className = "nav-sparks";
+
+        target.appendChild(sparkContainer);
+
+        // ==============================
+        // CREATE SPARK
+        // ==============================
+
+        function createSpark() {
+            const spark = document.createElement("div");
+
+            spark.className = "nav-spark";
+
+            spark.style.left =
+                Math.random() * 100 + "%";
+
+            spark.style.setProperty(
+                "--d",
+                1.2 + Math.random() * 1.2 + "s"
+            );
+
+            sparkContainer.appendChild(spark);
+
+            setTimeout(function () {
+                spark.remove();
+            }, 3000);
+        }
+
+        // Buat spark pertama langsung
+        createSpark();
+
+        // Spark berikutnya
+        setInterval(createSpark, 160);
+    }
+
+    // ==============================
+    // INITIALIZE
+    // ==============================
+
+    function init() {
+        const target = findTarget();
+
+        if (target) {
+            addSparkEffect(target);
+        }
+    }
+
+    // Jalankan langsung
+    init();
+
+    // Kalau DOM masih loading
+    document.addEventListener("DOMContentLoaded", init);
+
+    // Kalau halaman selesai loading
+    window.addEventListener("load", init);
+
+    // Pantau perubahan DOM
+    const observer = new MutationObserver(function () {
+        init();
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+})();
