@@ -1,13 +1,8 @@
 (function () {
     "use strict";
 
-    /* =====================================================
-       RAJANAGA99
-       CUSTOM GAME IMAGE + HOT BADGE
-       GitHub JS
-    ===================================================== */
-
-    const STYLE_ID = "rajanaga99-custom-game-style";
+    const STYLE_ID = "rjn99-game-custom-style";
+    const BADGE_CLASS = "rjn99-hot-badge";
 
     const GAMES = {
         "Mahjong Wins 3 - Black Scatter":
@@ -20,10 +15,9 @@
             "https://imgcdn.it.com/hb8fdn9z3sk9b845yd0f/external-source/ms/mahjong-2.webp"
     };
 
-
-    /* =====================================================
-       INJECT CSS
-    ===================================================== */
+    /* =========================================
+       CSS
+    ========================================= */
 
     function injectStyle() {
 
@@ -32,16 +26,16 @@
         }
 
         const style = document.createElement("style");
-
         style.id = STYLE_ID;
 
         style.textContent = `
 
-        /* ================================================
-           CUSTOM GAME IMAGE
-        ================================================ */
+        /* =========================================
+           GAME IMAGE
+        ========================================= */
 
         ${Object.keys(GAMES).map(function (name) {
+
             return `
             [data-game-name="${name}"]
             div[data-radix-aspect-ratio-wrapper] {
@@ -64,23 +58,40 @@
                 border-radius: inherit;
 
                 box-shadow:
-                    0 0 0 1px rgba(156,255,0,.35),
-                    0 0 6px rgba(156,255,0,.30),
-                    0 0 14px rgba(156,255,0,.18);
+                    0 0 0 1px rgba(156,255,0,.45),
+                    0 0 7px rgba(156,255,0,.35),
+                    0 0 16px rgba(156,255,0,.20);
 
                 transition:
-                    box-shadow .25s ease,
-                    transform .25s ease;
+                    box-shadow .25s ease;
+            }
+
+            /* Hilangkan pseudo HOT lama */
+            [data-game-name="${name}"]
+            div[data-radix-aspect-ratio-wrapper]::before {
+
+                content: none !important;
+                display: none !important;
+            }
+
+            /* Hilangkan shine pseudo lama */
+            [data-game-name="${name}"]
+            div[data-radix-aspect-ratio-wrapper]::after {
+
+                content: none !important;
+                display: none !important;
             }
             `;
+
         }).join("")}
 
 
-        /* ================================================
-           HIDE ORIGINAL GAME IMAGE
-        ================================================ */
+        /* =========================================
+           ORIGINAL IMAGE
+        ========================================= */
 
         ${Object.keys(GAMES).map(function (name) {
+
             return `
             [data-game-name="${name}"]
             img[data-nimg],
@@ -89,18 +100,19 @@
             img[src*="/_next/image"] {
 
                 opacity: 0 !important;
-
                 visibility: hidden !important;
             }
             `;
+
         }).join("")}
 
 
-        /* ================================================
-           HIDE ORIGINAL HOT TAG
-        ================================================ */
+        /* =========================================
+           ORIGINAL HOT TAG
+        ========================================= */
 
         ${Object.keys(GAMES).map(function (name) {
+
             return `
             [data-game-name="${name}"]
             img[src*="hot"],
@@ -114,152 +126,123 @@
                 display: none !important;
             }
             `;
+
         }).join("")}
 
 
-        /* ================================================
+        /* =========================================
            RAJANAGA99 HOT BADGE
-        ================================================ */
+        ========================================= */
 
-        ${Object.keys(GAMES).map(function (name) {
-            return `
-            [data-game-name="${name}"]
-            div[data-radix-aspect-ratio-wrapper]::before {
+        .${BADGE_CLASS} {
 
-                content: "\\1F525 HOT";
+            position: absolute;
 
-                position: absolute;
+            top: 6px;
+            left: 6px;
 
-                top: 6px;
-                left: 6px;
+            z-index: 9999;
 
-                z-index: 50;
+            display: flex;
 
-                display: flex;
+            align-items: center;
+            justify-content: center;
 
-                align-items: center;
-                justify-content: center;
+            height: 18px;
 
-                height: 18px;
+            padding: 0 7px;
 
-                padding: 0 7px;
+            border-radius: 6px;
 
-                border-radius: 6px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff0000 0%,
+                    #ff3d00 45%,
+                    #ff9d00 100%
+                );
 
-                background:
-                    linear-gradient(
-                        135deg,
-                        #ff1a00 0%,
-                        #ff4d00 45%,
-                        #ffb300 100%
-                    );
+            color: #ffffff;
 
-                color: #ffffff;
+            font-family:
+                "Segoe UI Emoji",
+                "Apple Color Emoji",
+                "Noto Color Emoji",
+                Arial,
+                sans-serif;
 
-                font-family:
-                    Arial,
-                    Helvetica,
-                    sans-serif;
+            font-size: 8px;
 
-                font-size: 8px;
+            font-weight: 900;
 
-                font-weight: 900;
+            line-height: 18px;
 
-                line-height: 1;
+            white-space: nowrap;
 
-                letter-spacing: .2px;
+            box-shadow:
+                0 0 4px rgba(255,40,0,.95),
+                0 0 9px rgba(255,70,0,.75),
+                0 0 15px rgba(255,110,0,.45),
+                0 2px 7px rgba(0,0,0,.65);
 
-                white-space: nowrap;
+            text-shadow:
+                0 1px 2px rgba(0,0,0,.8);
 
-                box-shadow:
-                    0 0 4px rgba(255,40,0,.95),
-                    0 0 9px rgba(255,80,0,.75),
-                    0 2px 8px rgba(0,0,0,.65);
+            pointer-events: none;
 
-                text-shadow:
-                    0 1px 2px rgba(0,0,0,.8);
+            transform-origin: center;
 
-                transform-origin: center;
-
-                animation:
-                    rajanagaHotPulse
-                    1.15s
-                    ease-in-out
-                    infinite;
-            }
-            `;
-        }).join("")}
+            animation:
+                rjn99HotPulse
+                1.15s
+                ease-in-out
+                infinite;
+        }
 
 
-        /* ================================================
-           IMAGE SHINE
-        ================================================ */
+        /* =========================================
+           SHINE
+        ========================================= */
 
-        ${Object.keys(GAMES).map(function (name) {
-            return `
-            [data-game-name="${name}"]
-            div[data-radix-aspect-ratio-wrapper]::after {
+        .rjn99-shine {
 
-                content: "";
+            position: absolute;
 
-                position: absolute;
+            top: 0;
+            left: -70%;
 
-                top: 0;
-                left: -80%;
+            width: 40%;
+            height: 100%;
 
-                width: 45%;
-                height: 100%;
+            z-index: 9998;
 
-                z-index: 40;
+            pointer-events: none;
 
-                pointer-events: none;
+            background:
+                linear-gradient(
+                    105deg,
+                    transparent 0%,
+                    rgba(255,255,255,.04) 35%,
+                    rgba(255,255,255,.42) 50%,
+                    rgba(255,255,255,.04) 65%,
+                    transparent 100%
+                );
 
-                background:
-                    linear-gradient(
-                        105deg,
-                        transparent 0%,
-                        rgba(255,255,255,.04) 35%,
-                        rgba(255,255,255,.45) 50%,
-                        rgba(255,255,255,.04) 65%,
-                        transparent 100%
-                    );
+            transform: skewX(-18deg);
 
-                transform: skewX(-18deg);
-
-                animation:
-                    rajanagaGameShine
-                    3.5s
-                    ease-in-out
-                    infinite;
-            }
-            `;
-        }).join("")}
+            animation:
+                rjn99Shine
+                3.8s
+                ease-in-out
+                infinite;
+        }
 
 
-        /* ================================================
-           HOVER GLOW
-        ================================================ */
-
-        ${Object.keys(GAMES).map(function (name) {
-            return `
-            [data-game-name="${name}"]:hover
-            div[data-radix-aspect-ratio-wrapper] {
-
-                box-shadow:
-                    0 0 0 1px rgba(156,255,0,.90),
-                    0 0 8px rgba(156,255,0,.75),
-                    0 0 18px rgba(156,255,0,.55),
-                    0 0 30px rgba(156,255,0,.25);
-            }
-            `;
-        }).join("")}
-
-
-        /* ================================================
+        /* =========================================
            HOT PULSE
-        ================================================ */
+        ========================================= */
 
-        @keyframes rajanagaHotPulse {
+        @keyframes rjn99HotPulse {
 
             0% {
                 transform: scale(1);
@@ -278,14 +261,14 @@
         }
 
 
-        /* ================================================
-           GAME SHINE
-        ================================================ */
+        /* =========================================
+           SHINE ANIMATION
+        ========================================= */
 
-        @keyframes rajanagaGameShine {
+        @keyframes rjn99Shine {
 
             0% {
-                left: -80%;
+                left: -70%;
                 opacity: 0;
             }
 
@@ -315,9 +298,9 @@
     }
 
 
-    /* =====================================================
-       PROCESS GAME
-    ===================================================== */
+    /* =========================================
+       APPLY GAME
+    ========================================= */
 
     function processGames() {
 
@@ -328,10 +311,10 @@
                     `[data-game-name="${gameName}"]`
                 );
 
-            elements.forEach(function (element) {
+            elements.forEach(function (game) {
 
                 const wrapper =
-                    element.querySelector(
+                    game.querySelector(
                         "div[data-radix-aspect-ratio-wrapper]"
                     );
 
@@ -341,15 +324,63 @@
 
                 wrapper.style.position = "relative";
 
+                /* ===============================
+                   REMOVE OLD BADGE
+                =============================== */
+
+                wrapper
+                    .querySelectorAll(
+                        ".rjn99-hot-badge"
+                    )
+                    .forEach(function (el) {
+                        el.remove();
+                    });
+
+                /* ===============================
+                   CREATE REAL HOT BADGE
+                =============================== */
+
+                const badge =
+                    document.createElement("div");
+
+                badge.className =
+                    BADGE_CLASS;
+
+                badge.textContent =
+                    "🔥 HOT";
+
+                wrapper.appendChild(badge);
+
+
+                /* ===============================
+                   CREATE SHINE
+                =============================== */
+
+                wrapper
+                    .querySelectorAll(
+                        ".rjn99-shine"
+                    )
+                    .forEach(function (el) {
+                        el.remove();
+                    });
+
+                const shine =
+                    document.createElement("div");
+
+                shine.className =
+                    "rjn99-shine";
+
+                wrapper.appendChild(shine);
+
             });
 
         });
     }
 
 
-    /* =====================================================
-       INITIALIZE
-    ===================================================== */
+    /* =========================================
+       INIT
+    ========================================= */
 
     function init() {
 
@@ -360,9 +391,9 @@
     }
 
 
-    /* =====================================================
+    /* =========================================
        START
-    ===================================================== */
+    ========================================= */
 
     if (document.readyState === "loading") {
 
@@ -378,9 +409,9 @@
     }
 
 
-    /* =====================================================
-       SUPPORT REACT / NEXT.JS / AJAX
-    ===================================================== */
+    /* =========================================
+       NEXT.JS / REACT OBSERVER
+    ========================================= */
 
     let timer = null;
 
@@ -397,7 +428,7 @@
 
                 processGames();
 
-            }, 100);
+            }, 150);
 
         });
 
@@ -415,7 +446,6 @@
                 subtree: true
             }
         );
-
     }
 
 
